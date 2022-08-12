@@ -10,6 +10,28 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
-model Example {
-    id String @id @default(cuid())
+
+model User {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  email     String   @unique
+  name      String?
+  role      Role     @default(USER)
+  notes     Note[]
+}
+
+model Note {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  title     String   @db.VarChar(255)
+  code      String   @db.Text()
+  note      Json
+  owner    User?    @relation(fields: [ownerId], references: [id]) 
+  ownerId  Int?
+}
+
+enum Role {
+  USER
+  ADMIN
 }

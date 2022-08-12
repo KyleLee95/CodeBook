@@ -1,45 +1,11 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
-import { trpc } from '../utils/trpc'
-import CodeMirror from '@uiw/react-codemirror'
-import { useState, useEffect, SyntheticEvent } from 'react'
-import { javascript } from '@codemirror/lang-javascript'
-import { python } from '@codemirror/lang-python'
-// import { okaidia } from '@uiw/codemirror-theme-okaidia'
-// import { eclipse } from '@uiw/codemirror-theme-eclipse'
-import Button from '../components/Button'
+
+import CodeEditor from '../components/CodeEditor'
 import Editor from '../components/Editor'
-const languages = ['javascript', 'python']
+import Navbar from '../components/Navbar'
 
 const Home: NextPage = () => {
-  const [code, setCode] = useState('')
-  const [language, setLanguage] = useState<string>('javascript')
-  const [theme, handleTheme] = useState<string>('dark')
-  const submitCode = trpc.useMutation([`codeEnvironments.${language}`], {
-    onError: (err) => {
-      console.log(err)
-    },
-    onSuccess: (data, variables, context) => {
-      console.log(data)
-    }
-  })
-
-  const handleChange = (string: string) => {
-    setCode(string)
-  }
-  const handleSubmit = (e: SyntheticEvent, code: string) => {
-    e.preventDefault()
-    submitCode.mutate({ code })
-  }
-
-  useEffect(() => {
-    var minLines = 35
-    var startingValue = ''
-    for (var i = 0; i < minLines; i++) {
-      startingValue += '\n'
-    }
-    setCode(startingValue)
-  }, [])
   return (
     <>
       <Head>
@@ -51,45 +17,17 @@ const Home: NextPage = () => {
           rel="stylesheet"
         />
       </Head>
-
-      <div className="container grid grid-cols-2">
-        <div>
+      {/* <nav>
+        <Navbar />
+      </nav> */}
+      <main className="min-h-screen grid gap-2 grid-cols-2">
+        <div className="">
           <Editor />
         </div>
-        <div>
-          <CodeMirror
-            className="h-screen w-screen"
-            theme={theme}
-            onChange={(string: string) => {
-              handleChange(string)
-            }}
-            value={code}
-            extensions={[javascript({ jsx: true }), python()]}
-          />
-          <div>
-            {/* <ul> */}
-            {languages.map((lang) => {
-              return (
-                <Button
-                  key={lang}
-                  text={lang}
-                  handleClick={() => setLanguage(lang)}
-                >
-                  {lang}
-                </Button>
-              )
-            })}
-            {/* </ul> */}
-            <button
-              type="submit"
-              className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
-              onClick={(e: SyntheticEvent) => handleSubmit(e, code)}
-            >
-              Run {language} code
-            </button>
-          </div>
+        <div className="h-full">
+          <CodeEditor />
         </div>
-      </div>
+      </main>
     </>
   )
 }

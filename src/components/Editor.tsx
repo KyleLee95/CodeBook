@@ -47,6 +47,7 @@ const Editor = () => {
 
   return (
     <ReactQuill
+      style={{ height: '60%', overflowY: 'auto' }}
       placeholder="Typesafety is next to godliness..."
       theme="snow"
       modules={modules}
