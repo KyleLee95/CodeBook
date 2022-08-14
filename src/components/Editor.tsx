@@ -5,6 +5,7 @@ import 'react-quill/dist/quill.snow.css'
 import 'highlight.js/styles/monokai-sublime.css'
 import { Sources } from 'quill'
 import { UnprivilegedEditor } from 'react-quill'
+import { JSONValue } from 'superjson/dist/types'
 
 interface EditorProps {
   text: string
@@ -65,8 +66,10 @@ const placeholderToRender =
 const Editor = ({ text }: EditorProps) => {
   const [value, setValue] = useState<any>('')
   useEffect(() => {
-    const parsedText = JSON.parse(text)
-    setValue(parsedText)
+    console.log(text)
+    const parsed = JSON.parse(text)
+
+    setValue(parsed)
   }, [text])
 
   const handleChange = (
@@ -75,6 +78,8 @@ const Editor = ({ text }: EditorProps) => {
     source: Sources,
     editor: UnprivilegedEditor
   ) => {
+    console.log(JSON.stringify(editor.getContents()))
+
     setValue(editor.getContents())
   }
 

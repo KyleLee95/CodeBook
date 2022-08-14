@@ -28,12 +28,8 @@ export const notesRouter = createRouter()
         }
       })
 
-      const parsedJSON: string =
-        note?.text !== undefined ? JSON.parse(note.text) : ''
-
       return {
-        note,
-        parsedJSON
+        note
       }
     }
   })
