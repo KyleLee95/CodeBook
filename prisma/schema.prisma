@@ -26,7 +26,7 @@ model Note {
   updatedAt DateTime @updatedAt
   title     String   @db.VarChar(255)
   code      String   @db.Text()
-  text      String  @default("{\"ops\": []}")   
+  text      String  @default("{\"ops\": []}")   //save as string because Quill Delta is technically a subset of JSON and underneath the hood is not JSON
   owner    User?    @relation(fields: [ownerId], references: [id]) 
   ownerId  Int?
 }
