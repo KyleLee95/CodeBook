@@ -5,37 +5,44 @@ import CodeMirror from '@uiw/react-codemirror'
 // import { eclipse } from '@uiw/codemirror-theme-eclipse'
 import Button from '../components/Button'
 import { trpc } from '../utils/trpc'
-import { useState, useEffect, SyntheticEvent } from 'react'
+import { useState, SyntheticEvent } from 'react'
+
+interface CodeEditorProps {
+  code: string
+}
 
 const languages = ['typescript', 'javascript', 'python']
-const CodeEditor = () => {
-  const [code, setCode] = useState('')
+const CodeEditor = ({ code }: CodeEditorProps) => {
+  const [codeEditor, setCodeEditor] = useState(code || '')
   const [language, setLanguage] = useState<string>('javascript')
   const [theme, handleTheme] = useState<string>('dark')
-  const submitCode = trpc.useMutation([`codeEnvironments.${language}`], {
-    onError: (err) => {
-      console.log(err)
-    },
-    onSuccess: (data, variables, context) => {
-      console.log(data)
-    }
-  })
+  const submitCode = (language: string) => {
+    const queryString = 'codeEnvironments.' + language
+    return trpc.useMutation([queryString], {
+      onError: (err) => {
+        console.log(err)
+      },
+      onSuccess: (data, variables, context) => {
+        console.log(data)
+      }
+    })
+  }
 
   const handleChange = (string: string) => {
-    setCode(string)
+    setCodeEditor(string)
   }
   const handleSubmit = (e: SyntheticEvent, code: string) => {
     e.preventDefault()
-    submitCode.mutate({ code })
+    // submitCode.mutate({ code })
   }
-  useEffect(() => {
-    var minLines = 35
-    var startingValue = ''
-    for (var i = 0; i < minLines; i++) {
-      startingValue += '\n'
-    }
-    setCode(startingValue)
-  }, [])
+  // useEffect(() => {
+  //   var minLines = 35
+  //   var startingValue = ''
+  //   for (var i = 0; i < minLines; i++) {
+  //     startingValue += '\n'
+  //   }
+  //   setCodeEditor(startingValue)
+  // }, [])
 
   return (
     <>
@@ -54,13 +61,12 @@ const CodeEditor = () => {
       </div>
       <div>
         <CodeMirror
-          // theme={theme}
           height="100%"
           width="100%"
           onChange={(string: string) => {
             handleChange(string)
           }}
-          value={code}
+          value={codeEditor}
           extensions={[javascript({ jsx: true }), python()]}
         />
       </div>

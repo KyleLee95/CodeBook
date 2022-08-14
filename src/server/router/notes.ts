@@ -1,40 +1,39 @@
 import { createRouter } from './context'
 import { z } from 'zod'
 
-export const notesRouter = createRouter().query('getAllNotes', {
-  input: z.object({
-    userId: z.number()
-  }),
-  async resolve({ ctx, input }) {
-    const notes = await ctx.prisma.note.findMany({
-      where: {
-        ownerId: input.userId
+export const notesRouter = createRouter()
+  .query('getAllNotes', {
+    input: z.object({
+      userId: z.number()
+    }),
+    async resolve({ ctx, input }) {
+      const notes = await ctx.prisma.note.findMany({
+        where: {
+          ownerId: input.userId
+        }
+      })
+      return {
+        notes
       }
-    })
-    return {
-      notes
     }
-  }
-})
+  })
+  .query('getNoteById', {
+    input: z.object({
+      noteId: z.number()
+    }),
+    async resolve({ ctx, input }) {
+      const note = await ctx.prisma.note.findUnique({
+        where: {
+          id: input.noteId
+        }
+      })
 
-// import { createRouter } from "./context";
-// import { z } from "zod";
+      const parsedJSON: string =
+        note?.text !== undefined ? JSON.parse(note.text) : ''
 
-// export const exampleRouter = createRouter()
-//   .query("hello", {
-//     input: z
-//       .object({
-//         text: z.string().nullish(),
-//       })
-//       .nullish(),
-//     resolve({ input }) {
-//       return {
-//         greeting: `Hello ${input?.text ?? "world"}`,
-//       };
-//     },
-//   })
-//   .query("getAll", {
-//     async resolve({ ctx }) {
-//       return await ctx.prisma.example.findMany();
-//     },
-//   });
+      return {
+        note,
+        parsedJSON
+      }
+    }
+  })

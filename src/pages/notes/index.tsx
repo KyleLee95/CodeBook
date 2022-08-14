@@ -1,6 +1,6 @@
-import React, { useEffect } from 'react'
-import { useQuery } from 'react-query'
+import React from 'react'
 import { trpc } from '../../utils/trpc'
+import Link from 'next/Link'
 const NotesList = () => {
   const { isLoading, isError, data, error } = trpc.useQuery(
     ['notes.getAllNotes', { userId: 1 }],
@@ -19,7 +19,11 @@ const NotesList = () => {
   return (
     <div>
       {data?.notes.map((note) => {
-        return <div key={note.id}>{note.title}</div>
+        return (
+          <div key={note.id}>
+            <Link href={`/notes/${note.id}`}>{note.title}</Link>
+          </div>
+        )
       })}
     </div>
   )

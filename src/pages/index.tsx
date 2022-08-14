@@ -1,8 +1,6 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
 
-import CodeEditor from '../components/CodeEditor'
-import Editor from '../components/Editor'
 import Navbar from '../components/Navbar'
 
 const Home: NextPage = () => {
@@ -17,15 +15,14 @@ const Home: NextPage = () => {
           rel="stylesheet"
         />
       </Head>
-      {/* <nav>
-        <Navbar />
-      </nav> */}
-      <main className="min-h-screen grid gap-2 grid-cols-2">
-        <div className="">
-          <Editor />
-        </div>
-        <div className="h-full">
-          <CodeEditor />
+      <main className="container mx-auto flex flex-col items-center justify-center min-h-screen p-4">
+        <h1 className="text-5xl md:text-[5rem] leading-normal font-extrabold text-gray-700">
+          Create <span className="text-purple-300">T3</span> App
+        </h1>
+        <p className="text-2xl text-gray-700">This stack uses:</p>
+        <div className="grid gap-3 pt-3 mt-3 text-center md:grid-cols-2 lg:w-2/3"></div>
+        <div className="pt-6 text-2xl text-blue-500 flex justify-center items-center w-full">
+          yay
         </div>
       </main>
     </>
