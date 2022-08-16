@@ -6,43 +6,31 @@ import CodeMirror from '@uiw/react-codemirror'
 import Button from '../components/Button'
 import { trpc } from '../utils/trpc'
 import { useState, SyntheticEvent } from 'react'
+import { JSONValue } from 'superjson/dist/types'
 
 interface CodeEditorProps {
   code: string
+  handleChange: (field: string, value: JSONValue | string) => void
 }
-
 const languages = ['typescript', 'javascript', 'python']
-const CodeEditor = ({ code }: CodeEditorProps) => {
-  const [codeEditor, setCodeEditor] = useState(code || '')
+const CodeEditor = ({ code, handleChange }: CodeEditorProps) => {
+  const [codeEditor, setCodeEditor] = useState<string>(code)
   const [language, setLanguage] = useState<string>('javascript')
-  const [theme, handleTheme] = useState<string>('dark')
-  const submitCode = (language: string) => {
-    const queryString = 'codeEnvironments.' + language
-    return trpc.useMutation([queryString], {
-      onError: (err) => {
-        console.log(err)
-      },
-      onSuccess: (data, variables, context) => {
-        console.log(data)
-      }
-    })
-  }
 
-  const handleChange = (string: string) => {
-    setCodeEditor(string)
-  }
+  const submitCode = trpc.useMutation(['codeEnvironments.javascript'], {
+    onSuccess: () => {
+      console.log('success')
+    },
+    onMutate: () => {
+      console.log('mutate')
+    }
+  })
+
   const handleSubmit = (e: SyntheticEvent, code: string) => {
     e.preventDefault()
-    // submitCode.mutate({ code })
+
+    submitCode.mutate({ code: codeEditor })
   }
-  // useEffect(() => {
-  //   var minLines = 35
-  //   var startingValue = ''
-  //   for (var i = 0; i < minLines; i++) {
-  //     startingValue += '\n'
-  //   }
-  //   setCodeEditor(startingValue)
-  // }, [])
 
   return (
     <>
@@ -63,8 +51,9 @@ const CodeEditor = ({ code }: CodeEditorProps) => {
         <CodeMirror
           height="100%"
           width="100%"
-          onChange={(string: string) => {
-            handleChange(string)
+          theme="dark"
+          onChange={(value) => {
+            handleChange('code', value)
           }}
           value={codeEditor}
           extensions={[javascript({ jsx: true }), python()]}

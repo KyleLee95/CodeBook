@@ -9,6 +9,7 @@ import { JSONValue } from 'superjson/dist/types'
 
 interface EditorProps {
   text: string
+  handleChange: (field: string, diff: JSONValue) => void
 }
 
 //turn off SSR for react quill because it requires rendering a textarea as a backup which will cause the app to break
@@ -63,26 +64,7 @@ const placeholders = [
 const placeholderToRender =
   placeholders[getRandomInt(0, placeholders.length - 1)]
 
-const Editor = ({ text }: EditorProps) => {
-  const [value, setValue] = useState<any>('')
-  useEffect(() => {
-    console.log(text)
-    const parsed = JSON.parse(text)
-
-    setValue(parsed)
-  }, [text])
-
-  const handleChange = (
-    content: string,
-    delta: any, //Deltastatic type definition doesn't exist due to library changes. GitHub issue fix was to just cast it to any🤷‍♂️
-    source: Sources,
-    editor: UnprivilegedEditor
-  ) => {
-    console.log(JSON.stringify(editor.getContents()))
-
-    setValue(editor.getContents())
-  }
-
+const Editor = ({ text, handleChange }: EditorProps) => {
   return (
     <ReactQuill
       style={{ height: '100%' }}
@@ -90,8 +72,12 @@ const Editor = ({ text }: EditorProps) => {
       theme="snow"
       modules={modules}
       formats={formats}
-      value={value}
-      onChange={handleChange}
+      defaultValue={JSON.parse(text)}
+      onChange={(value, delta, source, editor) => {
+        const diff = editor.getContents()
+
+        handleChange('text', JSON.stringify(diff))
+      }}
     />
   )
 }
