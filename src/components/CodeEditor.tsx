@@ -12,18 +12,21 @@ interface CodeEditorProps {
   code?: string
   handleChange: (field: string, value: JSONValue | string) => void
 }
+
 const languages = ['typescript', 'javascript', 'python']
 const CodeEditor = ({ code, handleChange }: CodeEditorProps) => {
   const [userSubmittedCodeResults, setUserSubmittedCodeResults] = useState('')
   const [language, setLanguage] = useState<string>('javascript')
 
   const submitCode = trpc.useMutation(['codeEnvironments.javascript'], {
-    onSuccess: (_data, variables) => {
-      console.log('successful code run', _data)
-      console.log(variables)
+    onSuccess: (data) => {
+      setUserSubmittedCodeResults(data.results)
     },
-    onMutate: (variables) => {
-      console.log('mutating user submitted code', variables)
+    onMutate: () => {
+      /*
+      TODO:
+      have some kind of running state here that creates a loading shell.
+      */
     }
   })
 
@@ -70,6 +73,7 @@ const CodeEditor = ({ code, handleChange }: CodeEditorProps) => {
           Run {language} code
         </button>
       </div>
+      <div>results: {userSubmittedCodeResults}</div>
     </>
   )
 }
