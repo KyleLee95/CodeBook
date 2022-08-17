@@ -30,7 +30,7 @@ export const notesRouter = createRouter()
       })
 
       return {
-        note
+        ...note
       }
     }
   })
@@ -42,8 +42,7 @@ export const notesRouter = createRouter()
       code: z.string()
     }),
     async resolve({ ctx, input }) {
-      const stringText = JSON.stringify(input.text)
-      const test = await ctx.prisma.note.update({
+      const updatedNote = await ctx.prisma.note.update({
         where: {
           id: input.id
         },
@@ -55,7 +54,7 @@ export const notesRouter = createRouter()
       })
 
       return {
-        success: true
+        ...updatedNote
       }
     }
   })

@@ -37,7 +37,9 @@ export const codeEnvironmentsRouter = createRouter()
        * the rest of our code base and does not have access to anything outside of the scope of the new process.
        * this keeps our server safe from any potentially malicious code that might try to take advantage of memory leaks
        * */
+
       const results = vm.runInNewContext(input.code)
+
       return {
         success: true,
         results: results
@@ -61,7 +63,7 @@ export const codeEnvironmentsRouter = createRouter()
         // received a message sent from the Python script (a simple "print" statement)
         res = message
       })
-      console.log('res', res)
+
       return {
         success: true,
         results: res

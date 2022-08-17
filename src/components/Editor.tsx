@@ -8,7 +8,7 @@ import { UnprivilegedEditor } from 'react-quill'
 import { JSONValue } from 'superjson/dist/types'
 
 interface EditorProps {
-  text: string
+  text: string | undefined
   handleChange: (field: string, diff: JSONValue) => void
 }
 

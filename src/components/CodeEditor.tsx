@@ -9,27 +9,29 @@ import { useState, SyntheticEvent } from 'react'
 import { JSONValue } from 'superjson/dist/types'
 
 interface CodeEditorProps {
-  code: string
+  code?: string
   handleChange: (field: string, value: JSONValue | string) => void
 }
 const languages = ['typescript', 'javascript', 'python']
 const CodeEditor = ({ code, handleChange }: CodeEditorProps) => {
-  const [codeEditor, setCodeEditor] = useState<string>(code)
+  const [userSubmittedCodeResults, setUserSubmittedCodeResults] = useState('')
   const [language, setLanguage] = useState<string>('javascript')
 
   const submitCode = trpc.useMutation(['codeEnvironments.javascript'], {
-    onSuccess: () => {
-      console.log('success')
+    onSuccess: (_data, variables) => {
+      console.log('successful code run', _data)
+      console.log(variables)
     },
-    onMutate: () => {
-      console.log('mutate')
+    onMutate: (variables) => {
+      console.log('mutating user submitted code', variables)
     }
   })
 
-  const handleSubmit = (e: SyntheticEvent, code: string) => {
+  const handleSubmit = (e: SyntheticEvent, code?: string) => {
     e.preventDefault()
+    if (!code) return
 
-    submitCode.mutate({ code: codeEditor })
+    submitCode.mutate({ code: code })
   }
 
   return (
@@ -55,7 +57,7 @@ const CodeEditor = ({ code, handleChange }: CodeEditorProps) => {
           onChange={(value) => {
             handleChange('code', value)
           }}
-          value={codeEditor}
+          value={code}
           extensions={[javascript({ jsx: true }), python()]}
         />
       </div>
