@@ -46,9 +46,7 @@ const CodeEditor = ({ code, handleChange }: CodeEditorProps) => {
               key={lang}
               text={lang}
               handleClick={() => setLanguage(lang)}
-            >
-              {lang}
-            </Button>
+            />
           )
         })}
       </div>

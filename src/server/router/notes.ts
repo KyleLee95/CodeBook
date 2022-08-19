@@ -58,3 +58,32 @@ export const notesRouter = createRouter()
       }
     }
   })
+  .mutation('createNote', {
+    input: z.object({
+      id: z.number().nullish(),
+      title: z.string().nullish(),
+      text: z.string().nullish(),
+      code: z.string().nullish(),
+      userId: z.number().nullish()
+    }),
+    async resolve({ ctx, input }) {
+      const newNote = await ctx.prisma.note.create({
+        data: {}
+      })
+
+      // update({
+      //   where: {
+      //     id: input.id
+      //   },
+      //   data: {
+      //     title: input.title,
+      //     text: input.text,
+      //     code: input.code
+      //   }
+      // })
+
+      return {
+        ...newNote
+      }
+    }
+  })

@@ -3,7 +3,6 @@ import React, { SyntheticEvent } from 'react'
 interface ButtonProps {
   handleClick: () => void
   text: string
-  children: any
 }
 
 const Button = ({ text, handleClick }: ButtonProps) => {
