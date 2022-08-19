@@ -22,11 +22,11 @@ const NoteEditor = () => {
   const utils = trpc.useContext()
   const { isLoading, data, error } = useNote(router.query.id)
   const updateNoteOnDB = trpc.useMutation(['notes.updateNoteById'], {
-    onSuccess: () => {
-      utils.invalidateQueries(['notes.getNoteById'])
+    onSuccess: (_data, variables) => {
+      utils.setQueryData(['notes.getNoteById'], variables)
     },
-    onMutate: () => {
-      utils.invalidateQueries(['notes.getNoteById'])
+    onMutate: (variables) => {
+      utils.setQueryData(['notes.getNoteById'], variables)
     }
   })
 
@@ -39,6 +39,7 @@ const NoteEditor = () => {
       [field]: value
     }
     if (!updated) return
+
     updateNoteOnDB.mutate(updated) //not sure how to fix this. need to research
   }
 
