@@ -2,6 +2,7 @@ import React from 'react'
 import { trpc } from '../../utils/trpc'
 import Link from 'next/Link'
 import Button from '../../components/Button'
+
 const NotesList = () => {
   const { isLoading, isError, data, error } = trpc.useQuery(
     ['notes.getAllNotes', { userId: '1' }],
