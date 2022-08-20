@@ -1,16 +1,12 @@
 import { createRouter } from './context'
 import { z } from 'zod'
-import { resolve } from 'path'
 
 export const notesRouter = createRouter()
   .query('getAllNotes', {
-    input: z.object({
-      userId: z.string()
-    }),
-    async resolve({ ctx, input }) {
+    async resolve({ ctx }) {
       const notes = await ctx.prisma.note.findMany({
         where: {
-          userId: input.userId
+          userId: ctx.session?.user?.id
         }
       })
       return {
@@ -37,9 +33,9 @@ export const notesRouter = createRouter()
   .mutation('updateNoteById', {
     input: z.object({
       id: z.number(),
-      title: z.string(),
-      text: z.string(),
-      code: z.string()
+      title: z.string().nullish(),
+      text: z.string().nullish(),
+      code: z.string().nullish()
     }),
     async resolve({ ctx, input }) {
       const updatedNote = await ctx.prisma.note.update({
@@ -47,9 +43,7 @@ export const notesRouter = createRouter()
           id: input.id
         },
         data: {
-          title: input.title,
-          text: input.text,
-          code: input.code
+          ...input
         }
       })
 
@@ -63,25 +57,21 @@ export const notesRouter = createRouter()
       id: z.number().nullish(),
       title: z.string().nullish(),
       text: z.string().nullish(),
-      code: z.string().nullish(),
-      userId: z.number().nullish()
+      code: z.string().nullish()
     }),
-    async resolve({ ctx, input }) {
-      // const newNote = await ctx.prisma.note.create({
-      //   data: {}
-      // })
-      // // update({
-      // //   where: {
-      // //     id: input.id
-      // //   },
-      // //   data: {
-      // //     title: input.title,
-      // //     text: input.text,
-      // //     code: input.code
-      // //   }
-      // // })
-      // return {
-      //   ...newNote
-      // }
+    async resolve({ ctx }) {
+      const newNote = await ctx.prisma.note.create({
+        data: {
+          user: {
+            connect: {
+              id: ctx.session?.user?.id
+            }
+          }
+        }
+      })
+
+      return {
+        ...newNote
+      }
     }
   })

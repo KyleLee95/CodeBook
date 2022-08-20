@@ -4,27 +4,15 @@ import { trpc } from '../../utils/trpc'
 import { useNote } from '../../hooks/useNote'
 import CodeEditor from '../../components/CodeEditor'
 import Editor from '../../components/Editor'
-
+import { useSession } from 'next-auth/react'
 import { JSONValue } from 'superjson/dist/types'
 
-interface noteType {
-  id?: number
-  title?: string
-  text?: string
-  code?: string
-  createdAt?: Date
-  updatedAt?: Date
-  ownerId?: number
-}
-
 const NoteEditor = () => {
+  const { data: session, status } = useSession()
   const router = useRouter()
   const utils = trpc.useContext()
   const { isLoading, data, error } = useNote(router.query.id)
   const updateNoteOnDB = trpc.useMutation(['notes.updateNoteById'], {
-    onSuccess: (_data, variables) => {
-      utils.setQueryData(['notes.getNoteById'], variables)
-    },
     onMutate: (variables) => {
       utils.setQueryData(['notes.getNoteById'], variables)
     }

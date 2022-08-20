@@ -2,13 +2,24 @@ import React from 'react'
 import { trpc } from '../../utils/trpc'
 import Link from 'next/Link'
 import Button from '../../components/Button'
-
+import { useSession } from 'next-auth/react'
+import { useRouter } from 'next/router'
+import { router } from '@trpc/server'
 const NotesList = () => {
-  const { isLoading, isError, data, error } = trpc.useQuery(
-    ['notes.getAllNotes', { userId: '1' }],
-    {}
-  )
-  const createNewNoteMutation = trpc.useMutation(['notes.createNote'])
+  const { data: session, status } = useSession()
+  const router = useRouter()
+  const utils = trpc.useContext()
+  const { isLoading, isError, data, error } = trpc.useQuery([
+    'notes.getAllNotes'
+  ])
+  const createNewNoteMutation = trpc.useMutation(['notes.createNote'], {
+    onSuccess: (data) => {
+      //invalidates the cache and refetches
+      utils.invalidateQueries(['notes.getAllNotes'])
+      //send user to new note page
+      router.push(`/notes/${data.id}`)
+    }
+  })
   const createNewNote = () => {
     createNewNoteMutation.mutate({})
   }
@@ -20,7 +31,12 @@ const NotesList = () => {
   }
 
   if (data?.notes.length === 0) {
-    return 'no notes!'
+    return (
+      <div>
+        <Button text="Create New Note" handleClick={createNewNote} />
+        no notes!
+      </div>
+    )
   }
 
   return (
