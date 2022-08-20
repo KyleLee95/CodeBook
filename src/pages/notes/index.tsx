@@ -4,7 +4,7 @@ import Link from 'next/Link'
 import Button from '../../components/Button'
 const NotesList = () => {
   const { isLoading, isError, data, error } = trpc.useQuery(
-    ['notes.getAllNotes', { userId: 1 }],
+    ['notes.getAllNotes', { userId: '1' }],
     {}
   )
   const createNewNoteMutation = trpc.useMutation(['notes.createNote'])

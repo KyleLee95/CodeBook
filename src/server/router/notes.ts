@@ -5,12 +5,12 @@ import { resolve } from 'path'
 export const notesRouter = createRouter()
   .query('getAllNotes', {
     input: z.object({
-      userId: z.number()
+      userId: z.string()
     }),
     async resolve({ ctx, input }) {
       const notes = await ctx.prisma.note.findMany({
         where: {
-          ownerId: input.userId
+          userId: input.userId
         }
       })
       return {
@@ -67,23 +67,21 @@ export const notesRouter = createRouter()
       userId: z.number().nullish()
     }),
     async resolve({ ctx, input }) {
-      const newNote = await ctx.prisma.note.create({
-        data: {}
-      })
-
-      // update({
-      //   where: {
-      //     id: input.id
-      //   },
-      //   data: {
-      //     title: input.title,
-      //     text: input.text,
-      //     code: input.code
-      //   }
+      // const newNote = await ctx.prisma.note.create({
+      //   data: {}
       // })
-
-      return {
-        ...newNote
-      }
+      // // update({
+      // //   where: {
+      // //     id: input.id
+      // //   },
+      // //   data: {
+      // //     title: input.title,
+      // //     text: input.text,
+      // //     code: input.code
+      // //   }
+      // // })
+      // return {
+      //   ...newNote
+      // }
     }
   })
