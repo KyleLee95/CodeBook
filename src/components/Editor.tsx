@@ -1,15 +1,13 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import dynamic from 'next/dynamic'
 import hljs from 'highlight.js'
 import 'react-quill/dist/quill.snow.css'
 import 'highlight.js/styles/monokai-sublime.css'
-import { Sources } from 'quill'
-import { UnprivilegedEditor } from 'react-quill'
-import { JSONValue } from 'superjson/dist/types'
+import { useUpdateNote } from '../hooks/useUpdateNote'
+import { useRouter } from 'next/router'
 
 interface EditorProps {
-  text: string | undefined
-  handleChange: (field: string, diff: JSONValue) => void
+  text: string | undefined | null
 }
 
 //turn off SSR for react quill because it requires rendering a textarea as a backup which will cause the app to break
@@ -64,7 +62,9 @@ const placeholders = [
 const placeholderToRender =
   placeholders[getRandomInt(0, placeholders.length - 1)]
 
-const Editor = ({ text, handleChange }: EditorProps) => {
+const Editor = ({ text }: EditorProps) => {
+  const updateNoteOnDB = useUpdateNote()
+  const router = useRouter()
   return (
     <ReactQuill
       style={{ height: '100%' }}
@@ -72,11 +72,13 @@ const Editor = ({ text, handleChange }: EditorProps) => {
       theme="snow"
       modules={modules}
       formats={formats}
-      defaultValue={JSON.parse(text)}
+      defaultValue={!text ? '' : text}
       onChange={(value, delta, source, editor) => {
         const diff = editor.getContents()
-
-        handleChange('text', JSON.stringify(diff))
+        updateNoteOnDB.mutate({
+          text: JSON.stringify(diff),
+          id: 1
+        })
       }}
     />
   )

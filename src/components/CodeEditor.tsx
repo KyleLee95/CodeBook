@@ -1,42 +1,32 @@
 import { javascript } from '@codemirror/lang-javascript'
 import { python } from '@codemirror/lang-python'
 import CodeMirror from '@uiw/react-codemirror'
-// import { okaidia } from '@uiw/codemirror-theme-okaidia'
-// import { eclipse } from '@uiw/codemirror-theme-eclipse'
 import Button from '../components/Button'
 import { trpc } from '../utils/trpc'
 import { useState, SyntheticEvent } from 'react'
-import { JSONValue } from 'superjson/dist/types'
-
+import { useRouter } from 'next/router'
+import { useUpdateNote } from '../hooks/useUpdateNote'
+import { useRunUserCode } from '../hooks/useRunUserCode'
 interface CodeEditorProps {
-  code?: string
-  handleChange: (field: string, value: JSONValue | string) => void
+  code?: string | null
 }
 
 const languages = ['typescript', 'javascript', 'python']
-const CodeEditor = ({ code, handleChange }: CodeEditorProps) => {
+
+const CodeEditor = ({ code }: CodeEditorProps) => {
+  const updateNote = useUpdateNote()
+  console.log('stale code', code)
+  const router = useRouter()
   const [userSubmittedCodeResults, setUserSubmittedCodeResults] = useState('')
+  const runUserCode = useRunUserCode(setUserSubmittedCodeResults)
   const [language, setLanguage] = useState<string>('javascript')
 
-  const submitCode = trpc.useMutation(['codeEnvironments.javascript'], {
-    onSuccess: (data) => {
-      setUserSubmittedCodeResults(data.results)
-    },
-    onMutate: () => {
-      /*
-      TODO:
-      have some kind of running state here that creates a loading shell.
-      */
-    }
-  })
-
   const handleSubmit = (e: SyntheticEvent, code?: string) => {
-    e.preventDefault()
     if (!code) return
-
-    submitCode.mutate({ code: code })
+    const results = runUserCode.mutate({ code: code })
+    console.log('results', results)
+    // setUserSubmittedCodeResults(results)
   }
-
   return (
     <>
       <div>
@@ -55,10 +45,19 @@ const CodeEditor = ({ code, handleChange }: CodeEditorProps) => {
           height="100%"
           width="100%"
           theme="dark"
+          autoSave="true"
           onChange={(value) => {
-            handleChange('code', value)
+            console.log('value', value)
+            const id =
+              typeof router.query.id === 'string'
+                ? parseInt(router.query.id)
+                : NaN
+            updateNote.mutate({
+              code: value,
+              id
+            })
           }}
-          value={code}
+          value={!code ? '' : code}
           extensions={[javascript({ jsx: true }), python()]}
         />
       </div>
@@ -66,7 +65,10 @@ const CodeEditor = ({ code, handleChange }: CodeEditorProps) => {
         <button
           type="submit"
           className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
-          onClick={(e: SyntheticEvent) => handleSubmit(e, code)}
+          onClick={(e: SyntheticEvent) => {
+            if (!code) return
+            handleSubmit(e, code)
+          }}
         >
           Run {language} code
         </button>

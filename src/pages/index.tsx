@@ -1,6 +1,7 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import Button from '../components/Button'
+import Navbar from '../components/Navbar'
 import { signIn, useSession } from 'next-auth/react'
 const Home: NextPage = () => {
   const { data: session, status } = useSession()
