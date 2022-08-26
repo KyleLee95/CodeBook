@@ -1,7 +1,7 @@
 import React, { SyntheticEvent } from 'react'
 
 interface ButtonProps {
-  handleClick: () => void
+  handleClick: (e?: SyntheticEvent<Element, Event>, code?: any) => void
   text: string
 }
 

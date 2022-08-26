@@ -71,3 +71,75 @@ export const codeEnvironmentsRouter = createRouter()
       // PythonShell.run('test.py', options, (err, results) => {})
     }
   })
+  .mutation('runCode', {
+    input: z.object({
+      code: z.string(),
+      language: z.string()
+    }),
+    async resolve({ input }) {
+      /**
+       *
+       * python
+       */
+      if (input.language === 'python') {
+        //write code to .py file
+        fs.writeFileSync('test.py', input.code)
+        let options = {
+          mode: 'text',
+          pythonOptions: ['-u'],
+          args: [1, 2, 3]
+        }
+        let res
+        pyshell.on('message', function (message) {
+          // received a message sent from the Python script (a simple "print" statement)
+          res = message
+        })
+        return {
+          success: true,
+          results: res
+        }
+      } else if (input.language === 'javascript') {
+        /**
+         *
+         * javascript
+         */
+        /**
+         * vm.runInNewContext runs the user submitted code in a new process.
+         * this is a better alternative to using eval() because a new process is isolated from
+         * the rest of our code base and does not have access to anything outside of the scope of the new process.
+         * this keeps our server safe from any potentially malicious code that might try to take advantage of memory leaks
+         * */
+
+        const results = vm.runInNewContext(input.code)
+        return {
+          success: true,
+          results: results
+        }
+      } else if (input.language === 'typescript') {
+        /**
+         *
+         * typescirpt
+         */
+
+        //transpile the TS to JS
+        let transpiledToJS = ts.transpile(input.code)
+
+        /**
+         * vm.runInNewContext runs the user submitted code in a new process.
+         * this is a better alternative to using eval() because a new process is isolated from
+         * the rest of our code base and does not have access to anything outside of the scope of the new process.
+         * this keeps our server safe from any potentially malicious code that might try to take advantage of memory leaks
+         * */
+        const results = vm.runInNewContext(transpiledToJS)
+        return {
+          success: true,
+          results: results
+        }
+      } else {
+        return {
+          success: true,
+          results: ''
+        }
+      }
+    }
+  })

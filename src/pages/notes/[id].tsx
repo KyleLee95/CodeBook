@@ -17,11 +17,12 @@ const NoteEditor = () => {
     return 'Loading...'
   }
 
-  if (!data) {
+  if (!data || !data.id) {
     return 'not found'
   }
 
-  const defaultText = typeof data.text === 'string' ? JSON.parse(data.text) : ''
+  const defaultText =
+    data?.text && typeof data.text === 'string' ? JSON.parse(data.text) : ''
 
   return (
     <main className="min-h-screen grid gap-2 grid-cols-2">

@@ -65,6 +65,8 @@ const placeholderToRender =
 const Editor = ({ text }: EditorProps) => {
   const updateNoteOnDB = useUpdateNote()
   const router = useRouter()
+  const id =
+    typeof router.query.id === 'string' ? parseInt(router.query.id) : NaN
   return (
     <ReactQuill
       style={{ height: '100%' }}
@@ -77,7 +79,7 @@ const Editor = ({ text }: EditorProps) => {
         const diff = editor.getContents()
         updateNoteOnDB.mutate({
           text: JSON.stringify(diff),
-          id: 1
+          id
         })
       }}
     />

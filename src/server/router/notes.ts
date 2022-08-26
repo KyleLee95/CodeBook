@@ -16,18 +16,14 @@ export const notesRouter = createRouter()
   })
   .query('getNoteById', {
     input: z.object({
-      noteId: z.number().nullish()
+      noteId: z.number()
     }),
     async resolve({ ctx, input }) {
-      if (!input.noteId) {
-        return {}
-      }
       const note = await ctx.prisma.note.findUnique({
         where: {
           id: input.noteId
         }
       })
-
       return {
         ...note
       }
