@@ -12,9 +12,10 @@ export const useUpdateNote = () => {
        */
       utils.cancelQuery(['notes.getNoteById'])
 
-      utils.setQueryData(['notes.getNoteById'], (old) => {
+      utils.setQueryData(['notes.getNoteById'], (staleState) => {
         return {
-          ...old,
+          ...staleState,
+          //merging the two objects. variables only holds what you updated. everything else from "staleState" can be kept.
           ...variables
         }
       })
