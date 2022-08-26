@@ -2,7 +2,6 @@ import { javascript } from '@codemirror/lang-javascript'
 import { python } from '@codemirror/lang-python'
 import CodeMirror from '@uiw/react-codemirror'
 import Button from '../components/Button'
-import { trpc } from '../utils/trpc'
 import { useState, SyntheticEvent } from 'react'
 import { useRouter } from 'next/router'
 import { useUpdateNote } from '../hooks/useUpdateNote'
@@ -47,7 +46,6 @@ const CodeEditor = ({ code }: CodeEditorProps) => {
           theme="dark"
           autoSave="true"
           onChange={(value) => {
-            console.log('value', value)
             const id =
               typeof router.query.id === 'string'
                 ? parseInt(router.query.id)
