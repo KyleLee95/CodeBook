@@ -7,35 +7,21 @@ interface TitleInputProps {
 const TitleInput = ({ title }: TitleInputProps) => {
   const updateNote = useUpdateNote()
   const router = useRouter()
-  const [open, setOpen] = useState(false)
-  if (open) {
-    return (
-      <input
-        className="outline hover:outline-2"
-        onChange={(e: React.FormEvent<HTMLInputElement>) => {
-          const id =
-            typeof router.query.id === 'string'
-              ? parseInt(router.query.id)
-              : NaN
-          updateNote.mutate({
-            title: e.currentTarget.value,
-            id
-          })
-        }}
-        defaultValue={title || ''}
-      />
-    )
-  } else {
-    return (
-      <h3
-        onClick={() => {
-          setOpen(true)
-        }}
-      >
-        {title}
-      </h3>
-    )
-  }
+
+  return (
+    <input
+      className="hover:border-2 hover:border-black"
+      onChange={(e: React.FormEvent<HTMLInputElement>) => {
+        const id =
+          typeof router.query.id === 'string' ? parseInt(router.query.id) : NaN
+        updateNote.mutate({
+          title: e.currentTarget.value,
+          id
+        })
+      }}
+      defaultValue={title || ''}
+    />
+  )
 }
 
 export default TitleInput

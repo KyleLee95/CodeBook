@@ -14,7 +14,7 @@ const languages = ['typescript', 'javascript', 'python']
 
 const CodeEditor = ({ code }: CodeEditorProps) => {
   const updateNote = useUpdateNote()
-  console.log('stale code', code)
+
   const router = useRouter()
   const [userSubmittedCodeResults, setUserSubmittedCodeResults] = useState('')
   const runUserCode = useRunUserCode(setUserSubmittedCodeResults)
