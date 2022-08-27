@@ -3,7 +3,7 @@ import { python } from '@codemirror/lang-python'
 import CodeMirror from '@uiw/react-codemirror'
 import DropDownButton from './DropDown'
 import Button from './Button'
-import { useState, SyntheticEvent } from 'react'
+import { useState } from 'react'
 import { useRouter } from 'next/router'
 import { useUpdateNote } from '../hooks/useUpdateNote'
 import { useRunUserCode } from '../hooks/useRunUserCode'
@@ -30,6 +30,20 @@ const CodeEditor = ({ code }: CodeEditorProps) => {
   return (
     <div>
       <div id="cm-wrapper">
+        <div>
+          <DropDownButton
+            stateOptions={languages}
+            state={language}
+            setState={setLanguage}
+          />
+          <Button
+            text="Run Code"
+            handleClick={() => {
+              if (!code) return
+              handleSubmit(code)
+            }}
+          />
+        </div>
         <CodeMirror
           height="100%"
           width="100%"
@@ -47,20 +61,6 @@ const CodeEditor = ({ code }: CodeEditorProps) => {
           value={!code ? '' : code}
           extensions={[javascript({ jsx: true }), python()]}
         />
-        <div>
-          <DropDownButton
-            stateOptions={languages}
-            state={language}
-            setState={setLanguage}
-          />
-          <Button
-            text="Run Code"
-            handleClick={() => {
-              if (!code) return
-              handleSubmit(code)
-            }}
-          />
-        </div>
       </div>
       <div>results: {userSubmittedCodeResults}</div>
     </div>

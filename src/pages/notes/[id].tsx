@@ -27,7 +27,6 @@ const NoteEditor = () => {
   return (
     <main className="min-h-screen grid gap-2 grid-cols-2">
       <div className="">
-        {/* <h3 className="text-2xl"> */}
         <TitleInput title={data?.title} />
 
         <Editor text={defaultText} />

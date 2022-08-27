@@ -24,6 +24,7 @@
     "@uiw/codemirror-theme-eclipse": "^4.11.4",
     "@uiw/codemirror-theme-okaidia": "^4.11.4",
     "@uiw/react-codemirror": "^4.11.4",
+    "heroicons": "^2.0.8",
     "highlight.js": "^11.6.0",
     "next": "12.2.3",
     "next-auth": "^4.10.3",

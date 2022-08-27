@@ -8,7 +8,7 @@ export const useRunUserCode = (
 
   const mutation = useMutation(['codeEnvironments.runCode'], {
     onSuccess: (data) => {
-      const stringResults = JSON.stringify(data.results)
+      const stringResults = JSON.stringify(data?.results)
       setState(stringResults)
     },
     onMutate: () => {
