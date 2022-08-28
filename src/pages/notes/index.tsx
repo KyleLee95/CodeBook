@@ -1,10 +1,10 @@
 import React from 'react'
 import { trpc } from '../../utils/trpc'
-import Link from 'next/Link'
+
 import Button from '../../components/Button'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
-import { router } from '@trpc/server'
+import Table from '../../components/Table'
 const NotesList = () => {
   const { data: session, status } = useSession()
   const router = useRouter()
@@ -23,6 +23,9 @@ const NotesList = () => {
   const createNewNote = () => {
     createNewNoteMutation.mutate({})
   }
+  if (!session?.user?.id) {
+    return 'please login'
+  }
   if (isLoading) {
     return 'loading...'
   }
@@ -38,23 +41,26 @@ const NotesList = () => {
       </div>
     )
   }
-
+  // console.log(data?.notes)
   return (
     <div className="grid grid-cols-1 mx-auto">
-      <div>
-        <Button text="Create New Note" handleClick={createNewNote} />
-      </div>
-      <div>
-        {data?.notes.map((note) => {
-          return (
-            <div key={note.id}>
-              <Link href={`/notes/${note.id}`}>{note.title}</Link>
-            </div>
-          )
-        })}
-      </div>
+      <Table notes={data?.notes} />
     </div>
   )
 }
 
 export default NotesList
+// <div className="grid grid-cols-1 mx-auto">
+//   <div>
+//     <Button text="Create New Note" handleClick={createNewNote} />
+//   </div>
+//   <div>
+//     {data?.notes.map((note) => {
+//       return (
+//         <div key={note.id}>
+//           <Link href={`/notes/${note.id}`}>{note.title}</Link>
+//         </div>
+//       )
+//     })}
+//   </div>
+// </div>

@@ -59,12 +59,12 @@ export const codeEnvironmentsRouter = createRouter()
       //   args: [1, 2, 3]
       // }
       let pyshell = new PythonShell('my_script.py')
-      console.log('hit here!')
+      // console.log('hit here!')
       let res
-      pyshell.send('hello')
+      // pyshell.send('hello')
       pyshell.on('message', function (message) {
         // received a message sent from the Python script (a simple "print" statement)
-        console.log(message)
+        // console.log(message)
       })
 
       return {

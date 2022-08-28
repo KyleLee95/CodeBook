@@ -1,13 +1,13 @@
 /* This example requires Tailwind CSS v2.0+ */
 import { Fragment } from 'react'
 import { Disclosure, Menu, Transition } from '@headlessui/react'
-import Link from 'next/Link'
+import Link from 'next/link'
 import Image from 'next/image'
 import { XIcon, MenuAlt1Icon } from '@heroicons/react/solid'
 import { signIn, signOut, useSession } from 'next-auth/react'
 import Button from './Button'
 const navigation = [
-  { name: 'Home', href: '/', current: true },
+  { name: 'Home', href: '/', current: false },
   { name: 'Notes', href: '/notes', current: false }
 ]
 
@@ -39,24 +39,22 @@ export default function NavBar() {
                 </Disclosure.Button>
               </div>
               <div className="flex-1 flex items-center justify-center sm:items-stretch sm:justify-start">
-                <div className="flex-shrink-0 flex items-center">
-                  {/* <Image
-                    className="block lg:hidden h-8 w-auto"
-                    layout="fill"
-                    src="https://tailwindui.com/img/logos/workflow-mark.svg?color=indigo&shade=500"
-                    alt="Workflow"
-                  />
-                  <Image
-                    className="hidden lg:block h-8 w-auto"
-                    layout="fill"
-                    src="https://tailwindui.com/img/logos/workflow-mark.svg?color=indigo&shade=500"
-                    alt="Workflow"
-                  /> */}
-                </div>
+                <Link href="/">
+                  <div className="flex-shrink-0 flex items-center cursor-pointer">
+                    <Image
+                      className="hidden lg:block h-8 w-auto"
+                      height="30px"
+                      width="30px"
+                      src="/logo.png"
+                      alt="Logo"
+                    />
+                  </div>
+                </Link>
                 <div className="hidden sm:block sm:ml-6">
                   <div className="flex space-x-4">
-                    {session?.user?.id
-                      ? navigation.map((item) => (
+                    {!session?.user?.id
+                      ? null
+                      : navigation.map((item) => (
                           <Link key={item.name} href={item.href}>
                             <a
                               className={classNames(
@@ -70,8 +68,7 @@ export default function NavBar() {
                               {item.name}
                             </a>
                           </Link>
-                        ))
-                      : null}
+                        ))}
                   </div>
                 </div>
               </div>
@@ -175,8 +172,9 @@ export default function NavBar() {
 
           <Disclosure.Panel className="sm:hidden">
             <div className="px-2 pt-2 pb-3 space-y-1">
-              {session?.user?.id
-                ? navigation.map((item) => (
+              {!session?.user?.id
+                ? null
+                : navigation.map((item) => (
                     <Disclosure.Button
                       key={item.name}
                       as="a"
@@ -191,8 +189,7 @@ export default function NavBar() {
                     >
                       {item.name}
                     </Disclosure.Button>
-                  ))
-                : null}
+                  ))}
             </div>
           </Disclosure.Panel>
         </>

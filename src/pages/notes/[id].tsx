@@ -4,11 +4,15 @@ import { useNote } from '../../hooks/useNote'
 import CodeEditor from '../../components/CodeEditor'
 import Editor from '../../components/Editor'
 import TitleInput from '../../components/TitleInput'
+import { useSession } from 'next-auth/react'
 const NoteEditor = () => {
   const router = useRouter()
-
+  const { data: session, status } = useSession()
   const { isLoading, data, error } = useNote(router.query.id)
 
+  if (!session?.user?.id) {
+    return 'please login'
+  }
   if (error) {
     return 'error'
   }

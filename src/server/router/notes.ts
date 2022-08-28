@@ -9,6 +9,7 @@ export const notesRouter = createRouter()
           userId: ctx.session?.user?.id
         }
       })
+
       return {
         notes
       }
