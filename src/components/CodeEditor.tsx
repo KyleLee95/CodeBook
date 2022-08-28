@@ -1,6 +1,7 @@
-import { javascript } from '@codemirror/lang-javascript'
-import { python } from '@codemirror/lang-python'
+// import { javascript } from '@codemirror/lang-javascript'
+// import { python } from '@codemirror/lang-python'
 import CodeMirror from '@uiw/react-codemirror'
+import AceEditor from 'react-ace'
 import DropDownButton from './DropDown'
 import Button from './Button'
 import { useState } from 'react'
@@ -12,6 +13,10 @@ interface CodeEditorProps {
 }
 
 const languages = ['typescript', 'javascript', 'python']
+
+import 'ace-builds/src-noconflict/mode-java'
+import 'ace-builds/src-noconflict/theme-github'
+import 'ace-builds/src-noconflict/ext-language_tools'
 
 const CodeEditor = ({ code }: CodeEditorProps) => {
   const updateNote = useUpdateNote()
@@ -44,7 +49,24 @@ const CodeEditor = ({ code }: CodeEditorProps) => {
             }}
           />
         </div>
-        <CodeMirror
+        <AceEditor
+          mode="javascript"
+          theme="monokai"
+          onChange={(newValue) => {
+            console.log('value', newValue)
+          }}
+          highlightActiveLine={false}
+          name="UNIQUE_ID_OF_DIV"
+          editorProps={{ $blockScrolling: true }}
+          setOptions={{
+            enableBasicAutocompletion: true,
+            enableLiveAutocompletion: true,
+            enableSnippets: false,
+            showLineNumbers: true,
+            tabSize: 2
+          }}
+        />
+        {/* <CodeMirror
           height="100%"
           width="100%"
           theme="dark"
@@ -60,7 +82,7 @@ const CodeEditor = ({ code }: CodeEditorProps) => {
           }}
           value={!code ? '' : code}
           extensions={[javascript({ jsx: true }), python()]}
-        />
+        /> */}
       </div>
       <div>results: {userSubmittedCodeResults}</div>
     </div>
