@@ -3,7 +3,7 @@ import { z } from 'zod'
 import fs from 'fs'
 import { PythonShell } from 'python-shell'
 import vm from 'vm'
-import * as ts from 'typescript'
+import { transpile } from 'typescript'
 const pyshell = new PythonShell('./test.py')
 export const codeEnvironmentsRouter = createRouter()
   .mutation('typescript', {
@@ -11,7 +11,7 @@ export const codeEnvironmentsRouter = createRouter()
       code: z.string()
     }),
     async resolve({ input }) {
-      let transpiledToJS = ts.transpile(input.code)
+      let transpiledToJS = transpile(input.code)
 
       /**
        * vm.runInNewContext runs the user submitted code in a new process.
@@ -102,7 +102,7 @@ export const codeEnvironmentsRouter = createRouter()
         //   results: res
         // }
         let pyshell = new PythonShell('test.py')
-        console.log('hit here!')
+
         let res
         // PythonShell.run('test.py', options, (err, result) => {
         //   if (err) throw err
@@ -137,6 +137,7 @@ export const codeEnvironmentsRouter = createRouter()
          * */
 
         const results = vm.runInNewContext(input.code)
+        console.log('code ran', results)
         return {
           success: true,
           results: results
@@ -148,7 +149,7 @@ export const codeEnvironmentsRouter = createRouter()
          */
 
         //transpile the TS to JS
-        let transpiledToJS = ts.transpile(input.code)
+        let transpiledToJS = transpile(input.code)
 
         /**
          * vm.runInNewContext runs the user submitted code in a new process.

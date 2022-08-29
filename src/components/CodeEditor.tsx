@@ -1,16 +1,35 @@
-// import { javascript } from '@codemirror/lang-javascript'
-// import { python } from '@codemirror/lang-python'
-import CodeMirror from '@uiw/react-codemirror'
-import AceEditor from 'react-ace'
 import DropDownButton from './DropDown'
 import Button from './Button'
 import { useState } from 'react'
 import { useRouter } from 'next/router'
 import { useUpdateNote } from '../hooks/useUpdateNote'
 import { useRunUserCode } from '../hooks/useRunUserCode'
+// import dynamic from 'next/dynamic'
+import AceEditor from 'react-ace'
+// import 'ace-builds/src-noconflict/ace'
+import 'ace-builds/src-noconflict/mode-javascript'
+import 'ace-builds/src-noconflict/theme-monokai'
+// import 'ace-builds/src-noconflict/mode-c_cpp'
+// import 'ace-builds/src-noconflict/theme-github'
+
 interface CodeEditorProps {
   code?: string | null
 }
+//turn off SSR for react quill because it requires rendering a textarea as a backup which will cause the app to break
+// const AceEditor = dynamic(
+//   async () => {
+//     const ace = await import('react-ace')
+//     import('ace-builds/src-noconflict/ace')
+//     import('ace-builds/src-noconflict/mode-javascript')
+//     import('ace-builds/src-noconflict/theme-monokai')
+//     return ace
+//   },
+//   {
+//     // eslint-disable-next-line react/display-name
+//     loading: () => null,
+//     ssr: false
+//   }
+// )
 
 const languages = ['typescript', 'javascript', 'python']
 
@@ -28,62 +47,56 @@ const CodeEditor = ({ code }: CodeEditorProps) => {
   const runUserCode = useRunUserCode(setUserSubmittedCodeResults, language)
 
   const handleSubmit = (code?: string) => {
+    console.log('code', code)
     if (!code) return
     runUserCode.mutate({ code: code, language: language })
   }
 
   return (
     <div>
-      <div id="cm-wrapper">
-        <div>
-          <DropDownButton
-            stateOptions={languages}
-            state={language}
-            setState={setLanguage}
-          />
-          <Button
-            text="Run Code"
-            handleClick={() => {
-              if (!code) return
-              handleSubmit(code)
-            }}
-          />
-        </div>
-        <AceEditor
-          mode="javascript"
-          theme="monokai"
-          onChange={(newValue) => {
-            console.log('value', newValue)
-          }}
-          highlightActiveLine={false}
-          name="UNIQUE_ID_OF_DIV"
-          editorProps={{ $blockScrolling: true }}
-          setOptions={{
-            enableBasicAutocompletion: true,
-            enableLiveAutocompletion: true,
-            enableSnippets: false,
-            showLineNumbers: true,
-            tabSize: 2
+      <div>
+        <DropDownButton
+          stateOptions={languages}
+          state={language}
+          setState={setLanguage}
+        />
+        <Button
+          text="Run Code"
+          handleClick={() => {
+            if (!code) return
+            handleSubmit(code)
           }}
         />
-        {/* <CodeMirror
-          height="100%"
-          width="100%"
-          theme="dark"
-          onChange={(value) => {
-            const id =
+      </div>
+      <AceEditor
+        style={{ width: '100%' }}
+        mode="javascript"
+        theme="monokai"
+        defaultValue={code ? code : ''}
+        onChange={(codeInEditor) => {
+          updateNote.mutate({
+            code: codeInEditor,
+            id:
               typeof router.query.id === 'string'
                 ? parseInt(router.query.id)
                 : NaN
-            updateNote.mutate({
-              code: value,
-              id
-            })
-          }}
-          value={!code ? '' : code}
-          extensions={[javascript({ jsx: true }), python()]}
-        /> */}
-      </div>
+          })
+        }}
+        highlightActiveLine={false}
+        name="UNIQUE_ID_OF_DIV"
+        editorProps={{ $blockScrolling: true }}
+        setOptions={{
+          useWorker: false,
+          enableBasicAutocompletion: true,
+          enableLiveAutocompletion: true,
+          enableSnippets: false,
+          showLineNumbers: true,
+          tabSize: 2
+        }}
+      />
+      {/* <div id="cm-wrapper">
+        
+      </div> */}
       <div>results: {userSubmittedCodeResults}</div>
     </div>
   )

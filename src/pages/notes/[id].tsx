@@ -1,10 +1,16 @@
 import React from 'react'
 import { useRouter } from 'next/router'
 import { useNote } from '../../hooks/useNote'
-import CodeEditor from '../../components/CodeEditor'
+// import CodeEditor from '../../components/CodeEditor'
 import Editor from '../../components/Editor'
 import TitleInput from '../../components/TitleInput'
 import { useSession } from 'next-auth/react'
+import dynamic from 'next/dynamic'
+
+const CodeEditor = dynamic(() => import('../../components/CodeEditor'), {
+  ssr: false
+})
+
 const NoteEditor = () => {
   const router = useRouter()
   const { data: session, status } = useSession()

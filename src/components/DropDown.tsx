@@ -27,7 +27,7 @@ const DropDownButton = ({
       <ul
         className={`${
           open
-            ? ''
+            ? 'z-50'
             : 'hidden flex-col bg-white drop-shadow-md w-full left-0 top-full absolute'
         }
            `}
@@ -40,7 +40,7 @@ const DropDownButton = ({
                   setState(option)
                   setOpen(!open)
                 }}
-                className="block px-5 py-3 hover:bg-amber-300 border-b border-gray-200"
+                className="z-50 block px-5 py-3 hover:bg-amber-300 border-b border-gray-200"
               >
                 {option}
               </a>
