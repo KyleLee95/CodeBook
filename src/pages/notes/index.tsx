@@ -1,11 +1,11 @@
 import React from 'react'
 import { trpc } from '../../utils/trpc'
-
 import Button from '../../components/Button'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
 import Table from '../../components/Table'
 import Head from 'next/head'
+import SearchBar from '../../components/SearchBar'
 const NotesList = () => {
   const { data: session, status } = useSession()
   const router = useRouter()
@@ -47,9 +47,13 @@ const NotesList = () => {
     <div className="grid grid-cols-1 mx-auto">
       <Head>
         <title>CodeBook | Notes</title>
-        <meta name="notes" content="CodeBook" />
+        <meta name="notes" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
+      <div>
+        <Button text="Create New Note" handleClick={createNewNote} />
+        <SearchBar />
+      </div>
       <Table notes={data?.notes} />
     </div>
   )

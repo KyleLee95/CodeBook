@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import React from 'react'
 
-const Table = function ({ notes }) {
+const Table = function ({ notes }: any) {
   return (
     <table className="table-auto">
       <thead>
@@ -13,11 +13,11 @@ const Table = function ({ notes }) {
       </thead>
       <tbody>
         {notes
-          .sort((a, b) => a.id - b.id)
-          .map((note) => {
+          .sort((a: any, b: any) => a.id - b.id)
+          .map((note: any) => {
             return (
               <Link key={note.id} href={`/notes/${note.id}`}>
-                <tr className="text-center cursor-pointer hover:bg-gray-200 rounded">
+                <tr className="text-center cursor-pointer hover:bg-gray-800 rounded hover:text-white">
                   <td className="inline-block">{note.title}</td>
                   <td className="text-center">
                     {note.createdAt.toLocaleDateString()}
