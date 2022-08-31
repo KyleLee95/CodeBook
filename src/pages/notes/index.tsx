@@ -5,6 +5,7 @@ import Button from '../../components/Button'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
 import Table from '../../components/Table'
+import Head from 'next/head'
 const NotesList = () => {
   const { data: session, status } = useSession()
   const router = useRouter()
@@ -44,23 +45,14 @@ const NotesList = () => {
   // console.log(data?.notes)
   return (
     <div className="grid grid-cols-1 mx-auto">
+      <Head>
+        <title>CodeBook | Notes</title>
+        <meta name="notes" content="CodeBook" />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
       <Table notes={data?.notes} />
     </div>
   )
 }
 
 export default NotesList
-// <div className="grid grid-cols-1 mx-auto">
-//   <div>
-//     <Button text="Create New Note" handleClick={createNewNote} />
-//   </div>
-//   <div>
-//     {data?.notes.map((note) => {
-//       return (
-//         <div key={note.id}>
-//           <Link href={`/notes/${note.id}`}>{note.title}</Link>
-//         </div>
-//       )
-//     })}
-//   </div>
-// </div>

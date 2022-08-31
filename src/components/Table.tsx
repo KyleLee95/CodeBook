@@ -17,7 +17,7 @@ const Table = function ({ notes }) {
           .map((note) => {
             return (
               <Link key={note.id} href={`/notes/${note.id}`}>
-                <tr className="text-center cursor-pointer hover:bg-gray-200">
+                <tr className="text-center cursor-pointer hover:bg-gray-200 rounded">
                   <td className="inline-block">{note.title}</td>
                   <td className="text-center">
                     {note.createdAt.toLocaleDateString()}
@@ -27,7 +27,6 @@ const Table = function ({ notes }) {
                   </td>
                 </tr>
               </Link>
-              // </React.Fragment>
             )
           })}
       </tbody>

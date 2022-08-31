@@ -1,41 +1,19 @@
-import DropDownButton from './DropDown'
+import DropDown from './DropDown'
 import Button from './Button'
 import { useState } from 'react'
 import { useRouter } from 'next/router'
 import { useUpdateNote } from '../hooks/useUpdateNote'
 import { useRunUserCode } from '../hooks/useRunUserCode'
-// import dynamic from 'next/dynamic'
 import AceEditor from 'react-ace'
-// import 'ace-builds/src-noconflict/ace'
 import 'ace-builds/src-noconflict/mode-javascript'
 import 'ace-builds/src-noconflict/theme-monokai'
-// import 'ace-builds/src-noconflict/mode-c_cpp'
-// import 'ace-builds/src-noconflict/theme-github'
+import 'ace-builds/src-noconflict/theme-github'
+import 'ace-builds/src-noconflict/ext-language_tools'
 
 interface CodeEditorProps {
   code?: string | null
 }
-//turn off SSR for react quill because it requires rendering a textarea as a backup which will cause the app to break
-// const AceEditor = dynamic(
-//   async () => {
-//     const ace = await import('react-ace')
-//     import('ace-builds/src-noconflict/ace')
-//     import('ace-builds/src-noconflict/mode-javascript')
-//     import('ace-builds/src-noconflict/theme-monokai')
-//     return ace
-//   },
-//   {
-//     // eslint-disable-next-line react/display-name
-//     loading: () => null,
-//     ssr: false
-//   }
-// )
-
-const languages = ['typescript', 'javascript', 'python']
-
-import 'ace-builds/src-noconflict/mode-java'
-import 'ace-builds/src-noconflict/theme-github'
-import 'ace-builds/src-noconflict/ext-language_tools'
+const languages = ['select language', 'typescript', 'javascript', 'python']
 
 const CodeEditor = ({ code }: CodeEditorProps) => {
   const updateNote = useUpdateNote()
@@ -43,11 +21,10 @@ const CodeEditor = ({ code }: CodeEditorProps) => {
   const router = useRouter()
   const [userSubmittedCodeResults, setUserSubmittedCodeResults] = useState('')
   //passing set state function as a parameter
-  const [language, setLanguage] = useState<string>('Javascript')
+  const [language, setLanguage] = useState<string>('select language')
   const runUserCode = useRunUserCode(setUserSubmittedCodeResults, language)
 
   const handleSubmit = (code?: string) => {
-    console.log('code', code)
     if (!code) return
     runUserCode.mutate({ code: code, language: language })
   }
@@ -55,10 +32,10 @@ const CodeEditor = ({ code }: CodeEditorProps) => {
   return (
     <div>
       <div>
-        <DropDownButton
-          stateOptions={languages}
-          state={language}
-          setState={setLanguage}
+        <DropDown
+          selectedOption={language}
+          options={languages}
+          setFn={setLanguage}
         />
         <Button
           text="Run Code"
@@ -94,9 +71,6 @@ const CodeEditor = ({ code }: CodeEditorProps) => {
           tabSize: 2
         }}
       />
-      {/* <div id="cm-wrapper">
-        
-      </div> */}
       <div>results: {userSubmittedCodeResults}</div>
     </div>
   )

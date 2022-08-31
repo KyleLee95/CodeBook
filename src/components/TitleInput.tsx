@@ -10,7 +10,7 @@ const TitleInput = ({ title }: TitleInputProps) => {
 
   return (
     <input
-      className="hover:border-2 hover:border-black"
+      className="pl-5 hover:border-2 hover:border-gray-200 w-1/2 rounded"
       onChange={(e: React.FormEvent<HTMLInputElement>) => {
         const id =
           typeof router.query.id === 'string' ? parseInt(router.query.id) : NaN

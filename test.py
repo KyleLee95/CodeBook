@@ -1,23 +1,29 @@
-var eraseOverlapIntervals = function (intervals) {
-  intervals.sort((a, b) => {
-    return a[0] - b[0]
+const testCases= []
+
+var merge = function (intervals) {
+  //edge case could be and empty array of intervals
+  const sortedIntervals = intervals.sort(([aStart, aEnd], [bStart, bEnd]) => {
+    return aStart !== bStart ? aStart - bStart : aEnd - bEnd
   })
-
-  let counter = 0
-  let prevEnd = intervals[0][1]
-
-  for (let i = 1; i < intervals.length; i++) {
-    const currInterval = intervals[i]
-    //updating the end value here to use in the next iteration
-    if (currInterval[0] >= prevEnd) {
-      prevEnd = currInterval[1]
+  //holds the "previous" interval aka the one that you just looked at
+  //and and are using to merge your intervals into
+  let prev = intervals[0]
+  //init your result vairbale with prev so that you have something to compare
+  //on the first iteration
+  let res = [prev]
+  for (let i = 0; i < sortedIntervals.length; i++) {
+    //case where you need to merge because the first value in your "next" interval is within your
+    //previous interval
+    if (intervals[i][0] <= prev[1]) {
+      prev[1] = Math.max(prev[1], intervals[i][1]) //set end value to higher of two intervals. this will update res
     } else {
-    //updating counter and checking to see which interval to "erase"
-      counter += 1
-      prevEnd = Math.min(prevEnd, currInterval[1])
+      //case where nothing overlaps so just push your interval.
+
+      res.push(intervals[i])
+      prev = intervals[i] //now you need to update your prev to be the new interval that was not overlapping
     }
   }
-  return counter
+  return res
 }
 
-eraseOverlapIntervals([[1,3],[1,2],[1,2]])
+merge([[1,4],[2,6],[8,10],[15,51]])

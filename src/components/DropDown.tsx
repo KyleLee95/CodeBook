@@ -1,55 +1,52 @@
-import React, { useState } from 'react'
-import Button from './Button'
+import { Fragment } from 'react'
+import { Menu, Transition } from '@headlessui/react'
+import { ChevronDownIcon } from '@heroicons/react/solid'
 
-interface DropDownButtonProps {
-  stateOptions: any
-  state: any
-  setState: any
+function classNames(...classes: any) {
+  return classes.filter(Boolean).join(' ')
 }
-const DropDownButton = ({
-  stateOptions,
-  state,
-  setState
-}: DropDownButtonProps) => {
-  const [open, setOpen] = useState(false)
 
+export default function DropDown({ selectedOption, options, setFn }: any) {
   return (
-    <div className="relative inline-block text-left">
-      <Button text={`Language: ${state}`} handleClick={() => setOpen(!open)} />
-      {/**
-       *
-       * Flex flex-col turn the list into a vertical element
-       * hidden hides them
-       * bg-white drop-shadow-md adds a white background and some shadow
-       * max-w-xs sets a max width for the dropdown as a whole
-       */}
+    <Menu as="div" className="relative inline-block text-left">
+      <div>
+        <Menu.Button className="inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500">
+          Language: {selectedOption}
+          <ChevronDownIcon className="-mr-1 ml-2 h-5 w-5" aria-hidden="true" />
+        </Menu.Button>
+      </div>
 
-      <ul
-        className={`${
-          open
-            ? 'z-50'
-            : 'hidden flex-col bg-white drop-shadow-md w-full left-0 top-full absolute'
-        }
-           `}
+      <Transition
+        as={Fragment}
+        enter="transition ease-out duration-100"
+        enterFrom="transform opacity-0 scale-95"
+        enterTo="transform opacity-100 scale-100"
+        leave="transition ease-in duration-75"
+        leaveFrom="transform opacity-100 scale-100"
+        leaveTo="transform opacity-0 scale-95"
       >
-        {stateOptions.map((option: any) => {
-          return (
-            <li key={option}>
-              <a
-                onClick={() => {
-                  setState(option)
-                  setOpen(!open)
-                }}
-                className="z-50 block px-5 py-3 hover:bg-amber-300 border-b border-gray-200"
-              >
-                {option}
-              </a>
-            </li>
-          )
-        })}
-      </ul>
-    </div>
+        <Menu.Items className="z-50 origin-top-right absolute left-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
+          <div className="py-1">
+            {options.map((option: string) => {
+              return (
+                <Menu.Item key={option}>
+                  {({ active }) => (
+                    <a
+                      onClick={() => setFn(option)}
+                      className={classNames(
+                        active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
+                        'block px-4 py-2 text-sm'
+                      )}
+                    >
+                      {option}
+                    </a>
+                  )}
+                </Menu.Item>
+              )
+            })}
+          </div>
+        </Menu.Items>
+      </Transition>
+    </Menu>
   )
 }
-
-export default DropDownButton
