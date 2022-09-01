@@ -8,9 +8,9 @@ import Head from 'next/head'
 import SearchBar from '../../components/SearchBar'
 
 const NotesTable = ({ searchTerm }: any) => {
-  const { isLoading, isError, data } = useGetAllNotes(searchTerm)
+  const { isLoading, isError, isFetching, data } = useGetAllNotes(searchTerm)
 
-  if (isLoading) {
+  if (isLoading || isFetching) {
     return <h2>loading...</h2>
   }
   if (isError) {
