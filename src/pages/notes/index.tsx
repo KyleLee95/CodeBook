@@ -1,48 +1,40 @@
-import React from 'react'
-import { trpc } from '../../utils/trpc'
+import React, { useState } from 'react'
 import Button from '../../components/Button'
 import { useSession } from 'next-auth/react'
-import { useRouter } from 'next/router'
+import { useCreateNote } from '../../hooks/useCreateNote'
+import { useGetAllNotes } from '../../hooks/useGetAllNotes'
 import Table from '../../components/Table'
 import Head from 'next/head'
 import SearchBar from '../../components/SearchBar'
-const NotesList = () => {
-  const { data: session, status } = useSession()
-  const router = useRouter()
-  const utils = trpc.useContext()
-  const { isLoading, isError, data, error } = trpc.useQuery([
-    'notes.getAllNotes'
-  ])
-  const createNewNoteMutation = trpc.useMutation(['notes.createNote'], {
-    onSuccess: (data) => {
-      //invalidates the cache and refetches
-      utils.invalidateQueries(['notes.getAllNotes'])
-      //send user to new note page
-      router.push(`/notes/${data.id}`)
-    }
-  })
-  const createNewNote = () => {
-    createNewNoteMutation.mutate({})
-  }
-  if (!session?.user?.id) {
-    return 'please login'
-  }
+
+const NotesTable = ({ searchTerm }: any) => {
+  const { isLoading, isError, data } = useGetAllNotes(searchTerm)
+
   if (isLoading) {
-    return 'loading...'
+    return <h2>loading...</h2>
   }
   if (isError) {
-    return error
+    return <h2>error</h2>
   }
 
   if (data?.notes.length === 0) {
-    return (
-      <div>
-        <Button text="Create New Note" handleClick={createNewNote} />
-        no notes!
-      </div>
-    )
+    return <h2>No notes found</h2>
   }
-  // console.log(data?.notes)
+  return <Table notes={data?.notes} />
+}
+const NotesList = () => {
+  const { data: session } = useSession()
+  const [searchTerm, setSearchTerm] = useState('')
+  const createNewNoteMutation = useCreateNote()
+
+  const createNewNote = () => {
+    createNewNoteMutation.mutate({})
+  }
+
+  if (!session?.user?.id) {
+    return <h2>please login</h2>
+  }
+
   return (
     <div className="grid grid-cols-1 mx-auto">
       <Head>
@@ -52,9 +44,9 @@ const NotesList = () => {
       </Head>
       <div>
         <Button text="Create New Note" handleClick={createNewNote} />
-        <SearchBar />
+        <SearchBar handleChange={setSearchTerm} />
       </div>
-      <Table notes={data?.notes} />
+      <NotesTable searchTerm={searchTerm} />
     </div>
   )
 }

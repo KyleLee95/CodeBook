@@ -3,10 +3,10 @@ import React from 'react'
 
 const Table = function ({ notes }: any) {
   return (
-    <table className="table-auto">
+    <table className="table-auto m-10">
       <thead>
         <tr className="">
-          <th>Name</th>
+          <th className="float-left">Name</th>
           <th>Created At:</th>
           <th>Updated At:</th>
         </tr>
@@ -17,8 +17,8 @@ const Table = function ({ notes }: any) {
           .map((note: any) => {
             return (
               <Link key={note.id} href={`/notes/${note.id}`}>
-                <tr className="text-center cursor-pointer hover:bg-gray-800 rounded hover:text-white">
-                  <td className="inline-block">{note.title}</td>
+                <tr className="cursor-pointer hover:bg-gray-800 rounded-md hover:text-white">
+                  <td className="py-2">{note.title}</td>
                   <td className="text-center">
                     {note.createdAt.toLocaleDateString()}
                   </td>

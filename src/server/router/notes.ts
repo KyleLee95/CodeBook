@@ -3,10 +3,20 @@ import { z } from 'zod'
 
 export const notesRouter = createRouter()
   .query('getAllNotes', {
-    async resolve({ ctx }) {
+    input: z
+      .object({
+        searchTerm: z.string()
+      })
+      .nullish(),
+    async resolve({ input, ctx }) {
+      console.log('input', input)
       const notes = await ctx.prisma.note.findMany({
         where: {
-          userId: ctx.session?.user?.id
+          userId: ctx.session?.user?.id,
+          title: {
+            contains: input?.searchTerm ? input.searchTerm : '',
+            mode: 'insensitive'
+          }
         }
       })
 

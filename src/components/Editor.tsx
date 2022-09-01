@@ -69,7 +69,7 @@ const Editor = ({ text }: EditorProps) => {
     typeof router.query.id === 'string' ? parseInt(router.query.id) : NaN
   return (
     <ReactQuill
-      style={{ height: '100%' }}
+      style={{ height: '50%' }}
       placeholder={placeholderToRender}
       theme="snow"
       modules={modules}
