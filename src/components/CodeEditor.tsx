@@ -5,7 +5,17 @@ import { useRouter } from 'next/router'
 import { useUpdateNote } from '../hooks/useUpdateNote'
 import { useRunUserCode } from '../hooks/useRunUserCode'
 import AceEditor from 'react-ace'
+
 import 'ace-builds/src-noconflict/mode-javascript'
+import 'ace-builds/src-noconflict/mode-python'
+import 'ace-builds/src-noconflict/mode-typescript'
+import 'ace-builds/src-noconflict/mode-c_cpp'
+
+import 'ace-builds/src-noconflict/snippets/javascript'
+import 'ace-builds/src-noconflict/snippets/python'
+import 'ace-builds/src-noconflict/snippets/typescript'
+import 'ace-builds/src-noconflict/snippets/c_cpp'
+
 import 'ace-builds/src-noconflict/theme-monokai'
 import 'ace-builds/src-noconflict/theme-github'
 import 'ace-builds/src-noconflict/ext-language_tools'
@@ -13,7 +23,12 @@ import 'ace-builds/src-noconflict/ext-language_tools'
 interface CodeEditorProps {
   code?: string | null
 }
-const languages = ['select language', 'typescript', 'javascript', 'python']
+const languages = [
+  { name: 'javascript', editorProp: 'javascript' },
+  { name: 'typescript', editorProp: 'typescript' },
+  { name: 'python', editorProp: 'python' },
+  { name: 'c++', editorProp: 'c_cpp' }
+]
 
 const CodeEditor = ({ code }: CodeEditorProps) => {
   const updateNote = useUpdateNote()
@@ -21,12 +36,15 @@ const CodeEditor = ({ code }: CodeEditorProps) => {
   const router = useRouter()
   const [userSubmittedCodeResults, setUserSubmittedCodeResults] = useState('')
   //passing set state function as a parameter
-  const [language, setLanguage] = useState<string>('select language')
-  const runUserCode = useRunUserCode(setUserSubmittedCodeResults, language)
+  const [language, setLanguage] = useState<any>({
+    name: 'javascript',
+    editorProp: 'javascript'
+  })
+  const runUserCode = useRunUserCode(setUserSubmittedCodeResults, language.name)
 
   const handleSubmit = (code?: string) => {
     if (!code) return
-    runUserCode.mutate({ code: code, language: language })
+    runUserCode.mutate({ code: code, language: language.name })
   }
 
   return (
@@ -47,7 +65,7 @@ const CodeEditor = ({ code }: CodeEditorProps) => {
       </div>
       <AceEditor
         style={{ width: '100%' }}
-        mode="javascript"
+        mode={language.editorProp}
         theme="monokai"
         defaultValue={code ? code : ''}
         onChange={(codeInEditor) => {
@@ -60,7 +78,7 @@ const CodeEditor = ({ code }: CodeEditorProps) => {
           })
         }}
         highlightActiveLine={false}
-        name="UNIQUE_ID_OF_DIV"
+        name="aceEditor"
         editorProps={{ $blockScrolling: true }}
         setOptions={{
           useWorker: false,

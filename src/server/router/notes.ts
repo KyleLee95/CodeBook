@@ -9,7 +9,6 @@ export const notesRouter = createRouter()
       })
       .nullish(),
     async resolve({ input, ctx }) {
-      console.log('input', input)
       const notes = await ctx.prisma.note.findMany({
         where: {
           userId: ctx.session?.user?.id,

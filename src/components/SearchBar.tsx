@@ -7,7 +7,7 @@ const SearchBar = ({ handleChange }: any) => {
         onChange={(e) => {
           handleChange(e.currentTarget.value)
         }}
-        className="mx-1 border border-solid border-gray-200 shadow-sm rounded"
+        className="px-1 py-1 mx-1 border border-solid border-gray-200 shadow-sm rounded"
         aria-label="search"
         placeholder="Search Notes"
       />

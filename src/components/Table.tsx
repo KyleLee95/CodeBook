@@ -13,7 +13,7 @@ const Table = function ({ notes }: any) {
       </thead>
       <tbody>
         {notes
-          .sort((a: any, b: any) => a.id - b.id)
+          .sort((a: any, b: any) => b.id - a.id)
           .map((note: any) => {
             return (
               <Link key={note.id} href={`/notes/${note.id}`}>
