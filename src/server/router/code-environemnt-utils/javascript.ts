@@ -1,7 +1,7 @@
 import vm from 'vm'
+import { Script, createContext } from 'vm'
 
 const handleJavascriptCode = (input: any) => {
-  console.log('input in JS code handler', input)
   /**
    * vm.runInNewContext runs the user submitted code in a new process.
    * this is a better alternative to using eval() because a new process is isolated from
@@ -9,9 +9,24 @@ const handleJavascriptCode = (input: any) => {
    * this keeps our server safe from any potentially malicious code that might try to take advantage of memory leaks
    * */
 
-  const results = vm.runInNewContext(input.code)
+  let contextObj = {
+    console: {
+      log: (...args) => {
+        console.log(...args)
+      }
+    }
+  }
+
+  const vmContext = createContext(contextObj)
+  const script = new Script(input.code)
+
+  const results = script.runInContext(vmContext)
+  // const results = vm.runInNewContext(input.code)
+  // const results = vm.runInThisContext(input.code)
+
   return {
     success: true,
+    stdout: script,
     results: results
   }
 }
