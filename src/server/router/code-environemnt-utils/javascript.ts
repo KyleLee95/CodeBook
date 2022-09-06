@@ -1,7 +1,6 @@
-import vm from 'vm'
-import { Script, createContext } from 'vm'
+import { NodeVM } from 'vm2'
 
-const handleJavascriptCode = (input: any) => {
+const handleJavascriptCode = async (input: any) => {
   /**
    * vm.runInNewContext runs the user submitted code in a new process.
    * this is a better alternative to using eval() because a new process is isolated from
@@ -9,25 +8,19 @@ const handleJavascriptCode = (input: any) => {
    * this keeps our server safe from any potentially malicious code that might try to take advantage of memory leaks
    * */
 
-  let contextObj = {
-    console: {
-      log: (...args) => {
-        console.log(...args)
-      }
+  const vm = new NodeVM({
+    require: {
+      external: true,
+      root: './'
     }
-  }
+  })
 
-  const vmContext = createContext(contextObj)
-  const script = new Script(input.code)
-
-  const results = script.runInContext(vmContext)
-  // const results = vm.runInNewContext(input.code)
-  // const results = vm.runInThisContext(input.code)
-
+  const a = await vm.run(input.code, 'vm.js')
+  console.log('test', a)
   return {
-    success: true,
-    stdout: script,
-    results: results
+    success: true
+    // stdout: script,
+    // results: results
   }
 }
 
