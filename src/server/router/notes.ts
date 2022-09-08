@@ -87,3 +87,16 @@ export const notesRouter = createRouter()
       }
     }
   })
+  .mutation('deleteNote', {
+    input: z.object({
+      id: z.number()
+    }),
+    async resolve({ input, ctx }) {
+      const deleteNote = await ctx.prisma.note.delete({
+        where: {
+          id: input.id
+        }
+      })
+      return { success: true }
+    }
+  })

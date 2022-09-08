@@ -6,7 +6,6 @@ import Editor from '../../components/Editor'
 import TitleInput from '../../components/TitleInput'
 import { useSession } from 'next-auth/react'
 import dynamic from 'next/dynamic'
-
 const CodeEditor = dynamic(() => import('../../components/CodeEditor'), {
   ssr: false
 })
