@@ -3,11 +3,9 @@ import { z } from 'zod'
 
 export const notesRouter = createRouter()
   .query('getAllNotes', {
-    input: z
-      .object({
-        searchTerm: z.string()
-      })
-      .nullish(),
+    input: z.object({
+      searchTerm: z.string()
+    }),
     async resolve({ input, ctx }) {
       const notes = await ctx.prisma.note.findMany({
         where: {
