@@ -5,6 +5,7 @@ import 'react-quill/dist/quill.snow.css'
 import 'highlight.js/styles/monokai-sublime.css'
 import { useUpdateNote } from '../hooks/useUpdateNote'
 import { useRouter } from 'next/router'
+import { off } from 'process'
 
 interface EditorProps {
   text: string | undefined | null
@@ -78,6 +79,7 @@ const Editor = ({ text }: EditorProps) => {
       formats={formats}
       defaultValue={!text ? '' : text}
       onChange={(value, _delta, _source, _editor) => {
+        if (!id) return
         updateNoteOnDB.mutate({
           text: JSON.stringify(value),
           id

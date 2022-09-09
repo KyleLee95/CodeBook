@@ -1,5 +1,5 @@
 import DropDown from './DropDown'
-import Button from './Button'
+
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import { useUpdateNote } from '../hooks/useUpdateNote'
@@ -57,7 +57,6 @@ import 'ace-builds/src-noconflict/ext-language_tools'
 interface CodeEditorProps {
   code?: string | null
   defaultLanguage?: string | null
-  defaultTheme?: string | null
 }
 const languages = [
   { name: 'javascript', editorProp: 'javascript' },
@@ -72,11 +71,7 @@ const languages = [
   { name: 'css', editorProp: 'css' }
 ]
 
-const CodeEditor = ({
-  code,
-  defaultLanguage,
-  defaultTheme
-}: CodeEditorProps) => {
+const CodeEditor = ({ code, defaultLanguage }: CodeEditorProps) => {
   const updateNote = useUpdateNote()
   const router = useRouter()
 
