@@ -14,6 +14,9 @@ export const notesRouter = createRouter()
             contains: input?.searchTerm ? input.searchTerm : '',
             mode: 'insensitive'
           }
+        },
+        orderBy: {
+          title: 'asc'
         }
       })
 
@@ -96,5 +99,83 @@ export const notesRouter = createRouter()
         }
       })
       return { success: true }
+    }
+  })
+  .mutation('sortNotesByTitleAsc', {
+    async resolve({ input, ctx }) {
+      const filteredNotes = await ctx.prisma.note.findMany({
+        where: {
+          userId: ctx.session?.user?.id
+        },
+        orderBy: {
+          title: 'asc'
+        }
+      })
+      return filteredNotes
+    }
+  })
+  .mutation('sortNotesByTitleDesc', {
+    async resolve({ input, ctx }) {
+      const filteredNotes = await ctx.prisma.note.findMany({
+        where: {
+          userId: ctx.session?.user?.id
+        },
+        orderBy: {
+          title: 'desc'
+        }
+      })
+      return filteredNotes
+    }
+  })
+  .mutation('sortNotesByCreatedAtDesc', {
+    async resolve({ input, ctx }) {
+      const filteredNotes = await ctx.prisma.note.findMany({
+        where: {
+          userId: ctx.session?.user?.id
+        },
+        orderBy: {
+          createdAt: 'desc'
+        }
+      })
+      return filteredNotes
+    }
+  })
+  .mutation('sortNotesByCreatedAtAsc', {
+    async resolve({ input, ctx }) {
+      const filteredNotes = await ctx.prisma.note.findMany({
+        where: {
+          userId: ctx.session?.user?.id
+        },
+        orderBy: {
+          createdAt: 'asc'
+        }
+      })
+      return filteredNotes
+    }
+  })
+  .mutation('sortNotesByUpdatedAtDesc', {
+    async resolve({ input, ctx }) {
+      const filteredNotes = await ctx.prisma.note.findMany({
+        where: {
+          userId: ctx.session?.user?.id
+        },
+        orderBy: {
+          updatedAt: 'desc'
+        }
+      })
+      return filteredNotes
+    }
+  })
+  .mutation('sortNotesByUpdatedAtAsc', {
+    async resolve({ input, ctx }) {
+      const filteredNotes = await ctx.prisma.note.findMany({
+        where: {
+          userId: ctx.session?.user?.id
+        },
+        orderBy: {
+          updatedAt: 'asc'
+        }
+      })
+      return filteredNotes
     }
   })
