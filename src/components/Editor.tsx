@@ -57,16 +57,18 @@ const formats = [
 const placeholders = [
   'Typesafety is next to godliness...',
   'Are you off by one?',
-  'Is running an o(n^2) algorithm really the best use of your time?'
+  'Is running an o(n^2) algorithm really the best use of your time?',
+  'Learning Dynamic Programming is hard. Trying to learn Dynamic Programming during your interview is harder.'
 ]
-const placeholderToRender =
-  placeholders[getRandomInt(0, placeholders.length - 1)]
 
 const Editor = ({ text }: EditorProps) => {
   const updateNoteOnDB = useUpdateNote()
   const router = useRouter()
   const id =
     typeof router.query.id === 'string' ? parseInt(router.query.id) : NaN
+
+  const placeholderToRender =
+    placeholders[getRandomInt(0, placeholders.length - 1)]
   return (
     <ReactQuill
       style={{ height: '100%', maxHeight: '750px' }}
@@ -75,8 +77,7 @@ const Editor = ({ text }: EditorProps) => {
       modules={modules}
       formats={formats}
       defaultValue={!text ? '' : text}
-      onChange={(value, _delta, _source, editor) => {
-        const diff = editor.getContents()
+      onChange={(value, _delta, _source, _editor) => {
         updateNoteOnDB.mutate({
           text: JSON.stringify(value),
           id
