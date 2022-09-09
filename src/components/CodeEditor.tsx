@@ -64,7 +64,7 @@ const languages = [
   { name: 'python', editorProp: 'python' },
   { name: 'java', editorProp: 'java' },
   { name: 'golang', editorProp: 'golang' },
-  { name: 'elixir', editorProp: 'exlixir' },
+  { name: 'elixir', editorProp: 'elixir' },
   { name: 'c#', editorProp: 'csharp' },
   { name: 'c++', editorProp: 'c_cpp' },
   { name: 'html', editorProp: 'html' },
