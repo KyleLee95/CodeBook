@@ -6,32 +6,77 @@ import { useUpdateNote } from '../hooks/useUpdateNote'
 import { useRunUserCode } from '../hooks/useRunUserCode'
 import AceEditor from 'react-ace'
 
+const themes = [
+  { name: 'monokai', editorProp: 'monokai' },
+  { name: 'github', editorProp: 'github' },
+  { name: 'tomorrow', editorProp: 'tomorrow' },
+  { name: 'kuroir', editorProp: 'kuroir' },
+  { name: 'twilight', editorProp: 'twilight' },
+  { name: 'xcode', editorProp: 'xcode' },
+  { name: 'textmate', editorProp: 'textmate' },
+  { name: 'solarized (Dark)', editorProp: 'solarized_dark' },
+  { name: 'solarized (Light)', editorProp: 'solarized_light' },
+  { name: 'terminal', editorProp: 'terminal' }
+]
+
 import 'ace-builds/src-noconflict/mode-javascript'
 import 'ace-builds/src-noconflict/mode-python'
 import 'ace-builds/src-noconflict/mode-typescript'
 import 'ace-builds/src-noconflict/mode-c_cpp'
+import 'ace-builds/src-noconflict/mode-java'
+import 'ace-builds/src-noconflict/mode-golang'
+import 'ace-builds/src-noconflict/mode-csharp'
+import 'ace-builds/src-noconflict/mode-html'
+import 'ace-builds/src-noconflict/mode-css'
+import 'ace-builds/src-noconflict/mode-elixir'
 
 import 'ace-builds/src-noconflict/snippets/javascript'
 import 'ace-builds/src-noconflict/snippets/python'
 import 'ace-builds/src-noconflict/snippets/typescript'
 import 'ace-builds/src-noconflict/snippets/c_cpp'
+import 'ace-builds/src-noconflict/snippets/java'
+import 'ace-builds/src-noconflict/snippets/golang'
+import 'ace-builds/src-noconflict/snippets/csharp'
+import 'ace-builds/src-noconflict/snippets/html'
+import 'ace-builds/src-noconflict/snippets/css'
+import 'ace-builds/src-noconflict/snippets/elixir'
 
 import 'ace-builds/src-noconflict/theme-monokai'
 import 'ace-builds/src-noconflict/theme-github'
+import 'ace-builds/src-noconflict/theme-tomorrow'
+import 'ace-builds/src-noconflict/theme-kuroir'
+import 'ace-builds/src-noconflict/theme-twilight'
+import 'ace-builds/src-noconflict/theme-xcode'
+import 'ace-builds/src-noconflict/theme-textmate'
+import 'ace-builds/src-noconflict/theme-solarized_dark'
+import 'ace-builds/src-noconflict/theme-solarized_light'
+import 'ace-builds/src-noconflict/theme-terminal'
+
 import 'ace-builds/src-noconflict/ext-language_tools'
 
 interface CodeEditorProps {
   code?: string | null
   defaultLanguage?: string | null
+  defaultTheme?: string | null
 }
 const languages = [
   { name: 'javascript', editorProp: 'javascript' },
   { name: 'typescript', editorProp: 'typescript' },
   { name: 'python', editorProp: 'python' },
-  { name: 'c++', editorProp: 'c_cpp' }
+  { name: 'java', editorProp: 'java' },
+  { name: 'golang', editorProp: 'golang' },
+  { name: 'elixir', editorProp: 'exlixir' },
+  { name: 'c#', editorProp: 'csharp' },
+  { name: 'c++', editorProp: 'c_cpp' },
+  { name: 'html', editorProp: 'html' },
+  { name: 'css', editorProp: 'css' }
 ]
 
-const CodeEditor = ({ code, defaultLanguage }: CodeEditorProps) => {
+const CodeEditor = ({
+  code,
+  defaultLanguage,
+  defaultTheme
+}: CodeEditorProps) => {
   const updateNote = useUpdateNote()
   const router = useRouter()
 
@@ -41,6 +86,11 @@ const CodeEditor = ({ code, defaultLanguage }: CodeEditorProps) => {
   const [language, setLanguage] = useState<any>({
     name: 'javascript',
     editorProp: 'javascript'
+  })
+
+  const [editorTheme, setEditorTheme] = useState<any>({
+    name: 'monokai',
+    editorProp: 'monokai'
   })
   const runUserCode = useRunUserCode(setUserSubmittedCodeResults, language.name)
 
@@ -58,10 +108,12 @@ const CodeEditor = ({ code, defaultLanguage }: CodeEditorProps) => {
   }, [defaultLanguage])
 
   if (!defaultLanguage) return null
+
   return (
-    <div>
+    <div className="h-full">
       <div>
         <DropDown
+          text="Language"
           selectedOption={language}
           options={languages}
           setFn={(option: any) => {
@@ -75,18 +127,26 @@ const CodeEditor = ({ code, defaultLanguage }: CodeEditorProps) => {
             })
           }}
         />
-        <Button
+        <DropDown
+          text="Theme"
+          selectedOption={editorTheme}
+          options={themes}
+          setFn={(option: any) => {
+            setEditorTheme(option)
+          }}
+        />
+        {/* <Button
           text="Run Code"
           handleClick={() => {
             if (!code) return
             handleSubmit(code)
           }}
-        />
+        /> */}
       </div>
       <AceEditor
-        style={{ width: '100%' }}
+        style={{ height: '100%', maxHeight: '90%', width: '100%' }}
         mode={language.editorProp}
-        theme="monokai"
+        theme={editorTheme.editorProp}
         defaultValue={code ? code : ''}
         onChange={(codeInEditor) => {
           updateNote.mutate({
@@ -109,7 +169,7 @@ const CodeEditor = ({ code, defaultLanguage }: CodeEditorProps) => {
           tabSize: 2
         }}
       />
-      <div>results: {userSubmittedCodeResults}</div>
+      {/* <div>results: {userSubmittedCodeResults}</div> */}
     </div>
   )
 }

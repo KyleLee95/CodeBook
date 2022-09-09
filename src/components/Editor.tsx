@@ -71,7 +71,7 @@ const Editor = ({ text }: EditorProps) => {
     placeholders[getRandomInt(0, placeholders.length - 1)]
   return (
     <ReactQuill
-      style={{ height: '100%', maxHeight: '750px' }}
+      style={{ height: '100%', maxHeight: '85%' }}
       placeholder={placeholderToRender}
       theme="snow"
       modules={modules}
