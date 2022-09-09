@@ -75,10 +75,10 @@ const Editor = ({ text }: EditorProps) => {
       modules={modules}
       formats={formats}
       defaultValue={!text ? '' : text}
-      onChange={(value, delta, source, editor) => {
+      onChange={(value, _delta, _source, editor) => {
         const diff = editor.getContents()
         updateNoteOnDB.mutate({
-          text: JSON.stringify(diff),
+          text: JSON.stringify(value),
           id
         })
       }}

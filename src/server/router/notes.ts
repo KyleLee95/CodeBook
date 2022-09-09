@@ -6,14 +6,31 @@ export const notesRouter = createRouter()
     input: z.object({
       searchTerm: z.string()
     }),
+
     async resolve({ input, ctx }) {
       const notes = await ctx.prisma.note.findMany({
         where: {
           userId: ctx.session?.user?.id,
-          title: {
-            contains: input?.searchTerm ? input.searchTerm : '',
-            mode: 'insensitive'
-          }
+          OR: [
+            {
+              title: {
+                contains: input?.searchTerm ? input.searchTerm : '',
+                mode: 'insensitive'
+              }
+            },
+            {
+              text: {
+                contains: input?.searchTerm ? input.searchTerm : '',
+                mode: 'insensitive'
+              }
+            },
+            {
+              code: {
+                contains: input?.searchTerm ? input.searchTerm : '',
+                mode: 'insensitive'
+              }
+            }
+          ]
         },
         orderBy: {
           updatedAt: 'desc'
