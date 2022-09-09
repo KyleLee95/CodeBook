@@ -47,7 +47,7 @@ const NoteEditor = () => {
           <Editor text={defaultText} />
         </div>
         <div className="h-full">
-          <CodeEditor code={data.code} />
+          <CodeEditor code={data.code} defaultLanguage={data.language} />
         </div>
       </main>
     </div>

@@ -1,6 +1,6 @@
 import DropDown from './DropDown'
 import Button from './Button'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import { useUpdateNote } from '../hooks/useUpdateNote'
 import { useRunUserCode } from '../hooks/useRunUserCode'
@@ -22,6 +22,7 @@ import 'ace-builds/src-noconflict/ext-language_tools'
 
 interface CodeEditorProps {
   code?: string | null
+  defaultLanguage?: string | null
 }
 const languages = [
   { name: 'javascript', editorProp: 'javascript' },
@@ -30,12 +31,13 @@ const languages = [
   { name: 'c++', editorProp: 'c_cpp' }
 ]
 
-const CodeEditor = ({ code }: CodeEditorProps) => {
+const CodeEditor = ({ code, defaultLanguage }: CodeEditorProps) => {
   const updateNote = useUpdateNote()
-
   const router = useRouter()
+
   const [userSubmittedCodeResults, setUserSubmittedCodeResults] = useState('')
   //passing set state function as a parameter
+
   const [language, setLanguage] = useState<any>({
     name: 'javascript',
     editorProp: 'javascript'
@@ -47,13 +49,31 @@ const CodeEditor = ({ code }: CodeEditorProps) => {
     runUserCode.mutate({ code: code, language: language.name })
   }
 
+  useEffect(() => {
+    if (typeof defaultLanguage !== 'string') {
+      return
+    } else {
+      setLanguage(JSON.parse(defaultLanguage))
+    }
+  }, [defaultLanguage])
+
+  if (!defaultLanguage) return null
   return (
     <div>
       <div>
         <DropDown
           selectedOption={language}
           options={languages}
-          setFn={setLanguage}
+          setFn={(option: any) => {
+            setLanguage(option)
+            updateNote.mutate({
+              id:
+                typeof router.query.id === 'string'
+                  ? parseInt(router.query.id)
+                  : NaN,
+              language: JSON.stringify(option)
+            })
+          }}
         />
         <Button
           text="Run Code"
