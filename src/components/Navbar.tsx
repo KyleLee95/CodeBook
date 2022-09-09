@@ -5,10 +5,15 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { XIcon, MenuAlt1Icon } from '@heroicons/react/solid'
 import { signIn, signOut, useSession } from 'next-auth/react'
-import Button from './Button'
+
 const navigation = [
   { name: 'Home', href: '/', current: false },
   { name: 'Notes', href: '/notes', current: false }
+]
+
+const unauthNav = [
+  { name: 'Sign In', href: '/api/auth/signIn', current: false },
+  { name: 'Sign Up', href: '/api/auth/signIn', current: false }
 ]
 
 function classNames(...classes: any) {
@@ -29,7 +34,9 @@ export default function NavBar() {
                 <Disclosure.Button className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">
                   <span className="sr-only">Open main menu</span>
                   {open ? (
-                    <XIcon className="block h-6 w-6" aria-hidden="true" />
+                    <>
+                      <XIcon className="block h-6 w-6" aria-hidden="true" />
+                    </>
                   ) : (
                     <MenuAlt1Icon
                       className="block h-6 w-6"
@@ -53,7 +60,23 @@ export default function NavBar() {
                 <div className="hidden sm:block sm:ml-6">
                   <div className="flex space-x-4">
                     {!session?.user?.id
-                      ? null
+                      ? unauthNav.map((item) => (
+                          <a
+                            key={item.name}
+                            onClick={() => {
+                              signIn()
+                            }}
+                            className={classNames(
+                              item.current
+                                ? 'bg-gray-900 text-white'
+                                : 'text-gray-300 hover:bg-gray-700 hover:text-white',
+                              'px-3 py-2 rounded-md text-sm font-medium'
+                            )}
+                            aria-current={item.current ? 'page' : undefined}
+                          >
+                            {item.name}
+                          </a>
+                        ))
                       : navigation.map((item) => (
                           <Link key={item.name} href={item.href}>
                             <a
@@ -124,22 +147,7 @@ export default function NavBar() {
                       </Menu.Items>
                     </Transition>
                   </Menu>
-                ) : (
-                  <>
-                    <Button
-                      text="Sign In"
-                      handleClick={() => {
-                        signIn()
-                      }}
-                    />
-                    <Button
-                      text="Get Started"
-                      handleClick={() => {
-                        signIn()
-                      }}
-                    />
-                  </>
-                )}
+                ) : null}
               </div>
             </div>
           </div>
@@ -147,7 +155,25 @@ export default function NavBar() {
           <Disclosure.Panel className="sm:hidden">
             <div className="px-2 pt-2 pb-3 space-y-1">
               {!session?.user?.id
-                ? null
+                ? unauthNav.map((item) => (
+                    <Disclosure.Button
+                      key={item.name}
+                      as="a"
+                      onClick={() => {
+                        signIn()
+                      }}
+                      href={item.href}
+                      className={classNames(
+                        item.current
+                          ? 'bg-gray-900 text-white'
+                          : 'text-gray-300 hover:bg-gray-700 hover:text-white',
+                        'block px-3 py-2 rounded-md text-base font-medium'
+                      )}
+                      aria-current={item.current ? 'page' : undefined}
+                    >
+                      {item.name}
+                    </Disclosure.Button>
+                  ))
                 : navigation.map((item) => (
                     <Disclosure.Button
                       key={item.name}

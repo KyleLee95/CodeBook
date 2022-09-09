@@ -5,7 +5,8 @@ import 'ace-builds/src-noconflict/theme-monokai'
 import 'ace-builds/src-noconflict/ext-language_tools'
 export default function HomePageEditor() {
   return (
-    <AceEditor // style={{ height: '100%', maxHeight: '90%', width: '100%' }}
+    <AceEditor
+      style={{ height: '100%', maxHeight: '90%', width: '100%' }}
       mode="javascript"
       theme="monokai"
       defaultValue={'try me!'}
