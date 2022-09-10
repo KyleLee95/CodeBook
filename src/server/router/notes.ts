@@ -90,7 +90,8 @@ export const notesRouter = createRouter()
       id: z.number().nullish(),
       title: z.string().nullish(),
       text: z.string().nullish(),
-      code: z.string().nullish()
+      code: z.string().nullish(),
+      language: z.string().nullish()
     }),
     async resolve({ ctx }) {
       const newNote = await ctx.prisma.note.create({

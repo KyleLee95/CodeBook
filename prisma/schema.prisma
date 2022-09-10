@@ -75,7 +75,7 @@ model Note {
   title     String?   @db.VarChar(255) @default("New Note")
   code      String?   @db.Text() @default("")
   text      String?  @default("")   //save as string because Quill Delta is technically a subset of JSON and underneath the hood is not JSON
-  language  String  @default("{\"name\":\"javascript\",\"editorProp\":\"javascript\"}" )    
+  language  String?  @default("{\"name\":\"javascript\",\"editorProp\":\"javascript\"}" )    
   userId    String
   user      User    @relation(fields: [userId], references: [id])
 }
