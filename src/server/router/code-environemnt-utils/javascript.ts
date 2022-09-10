@@ -16,7 +16,7 @@ const handleJavascriptCode = async (input: any) => {
   })
 
   const a = await vm.run(input.code, 'vm.js')
-  console.log('test', a)
+
   return {
     success: true,
     results: ''

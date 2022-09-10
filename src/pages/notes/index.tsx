@@ -9,7 +9,7 @@ import SearchBar from '../../components/SearchBar'
 
 const NotesTable = ({ searchTerm }: any) => {
   const { isLoading, isError, isFetching, data } = useGetAllNotes(searchTerm)
-
+  console.log('data', data)
   if (isLoading || isFetching) {
     return <h2>loading...</h2>
   }

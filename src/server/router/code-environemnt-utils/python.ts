@@ -10,14 +10,14 @@ const handlePythonCode = async (input: any) => {
       function (err: any, results: any) {
         // received a message sent from the Python script (a simple "print" statement)
         if (err) {
-          console.log('err', err)
+          console.error('err', err)
           return resolve(err)
         }
         return resolve(results)
       }
     )
   })
-  console.log('results', results)
+
   return {
     success: true,
     results: results

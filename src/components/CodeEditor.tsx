@@ -56,7 +56,7 @@ import 'ace-builds/src-noconflict/ext-language_tools'
 
 interface CodeEditorProps {
   code?: string | null
-  defaultLanguage?: string | null
+  defaultLanguage?: any
 }
 const languages = [
   { name: 'javascript', editorProp: 'javascript' },
@@ -95,11 +95,7 @@ const CodeEditor = ({ code, defaultLanguage }: CodeEditorProps) => {
   }
 
   useEffect(() => {
-    if (typeof defaultLanguage !== 'string') {
-      return
-    } else {
-      setLanguage(JSON.parse(defaultLanguage))
-    }
+    setLanguage(JSON.parse(defaultLanguage))
   }, [defaultLanguage])
 
   if (!defaultLanguage) return null
@@ -113,6 +109,7 @@ const CodeEditor = ({ code, defaultLanguage }: CodeEditorProps) => {
           options={languages}
           setFn={(option: any) => {
             setLanguage(option)
+
             updateNote.mutate({
               id:
                 typeof router.query.id === 'string'

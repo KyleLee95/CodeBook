@@ -41,7 +41,7 @@ const NoteEditor = () => {
         <meta name="notes" content="CodeBook" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className="min-h-screen max-h-screen grid gap-2 grid-cols-2 overflow-hidden">
+      <main className="min-h-screen max-h-screen grid gap-2 md:grid-cols-2 sm:grid-cols-1 overflow-hidden">
         <div className="">
           <TitleInput title={data?.title} />
           <Editor text={defaultText} />

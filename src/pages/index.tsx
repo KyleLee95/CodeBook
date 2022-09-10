@@ -14,6 +14,7 @@ const HomePageCodeEditor = dynamic(
 import { signIn, useSession } from 'next-auth/react'
 const Home: NextPage = () => {
   const { data: session, status } = useSession()
+
   return (
     <>
       <Head>
@@ -27,7 +28,7 @@ const Home: NextPage = () => {
         <h2 className="text-2xl md:text-[2rem] leading-normal font-extrabold text-gray-700">
           Try the demo below:
         </h2>
-        <div className="grid grid-cols-2 h-screen">
+        <div className="grid md:grid-cols-2 sm:grid-cols-1 h-screen">
           <Editor text="try me!" />
           <HomePageCodeEditor />
         </div>
