@@ -1,11 +1,9 @@
 import DropDown from './DropDown'
-
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import { useUpdateNote } from '../hooks/useUpdateNote'
-import { useRunUserCode } from '../hooks/useRunUserCode'
+//import { useRunUserCode } from '../hooks/useRunUserCode'
 import AceEditor from 'react-ace'
-
 const themes = [
   { name: 'monokai', editorProp: 'monokai' },
   { name: 'github', editorProp: 'github' },
@@ -75,7 +73,7 @@ const CodeEditor = ({ code, defaultLanguage }: CodeEditorProps) => {
   const updateNote = useUpdateNote()
   const router = useRouter()
 
-  const [userSubmittedCodeResults, setUserSubmittedCodeResults] = useState('')
+  //const [userSubmittedCodeResults, setUserSubmittedCodeResults] = useState('')
   //passing set state function as a parameter
 
   const [language, setLanguage] = useState<any>({
@@ -87,12 +85,12 @@ const CodeEditor = ({ code, defaultLanguage }: CodeEditorProps) => {
     name: 'monokai',
     editorProp: 'monokai'
   })
-  const runUserCode = useRunUserCode(setUserSubmittedCodeResults, language.name)
+  //const runUserCode = useRunUserCode(setUserSubmittedCodeResults, language.name)
 
-  const handleSubmit = (code?: string) => {
-    if (!code) return
-    runUserCode.mutate({ code: code, language: language.name })
-  }
+  //const handleSubmit = (code?: string) => {
+  //if (!code) return
+  //runUserCode.mutate({ code: code, language: language.name })
+  //}
 
   useEffect(() => {
     setLanguage(JSON.parse(defaultLanguage))
