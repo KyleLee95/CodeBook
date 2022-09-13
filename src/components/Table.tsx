@@ -3,10 +3,10 @@ import React from 'react'
 import TableSmButton from './TableSmButton'
 import { useDeleteNote } from '../hooks/useDeleteNote'
 import { Note } from '@prisma/client'
-interface Props {
+interface TableProps {
   notes: Array<Note> | undefined
 }
-const Table: React.FC<Props> = function ({ notes }) {
+const Table: React.FC<TableProps> = function ({ notes }) {
   console.log('notes', notes)
   const deleteNote = useDeleteNote()
 
@@ -78,7 +78,7 @@ const Table: React.FC<Props> = function ({ notes }) {
           </tr>
         </thead>
         <tbody>
-          {notes.map((note: Note) => {
+          {notes?.map((note: Note) => {
             return (
               <Link key={note.id} href={`/notes/${note.id}`}>
                 <tr className="mx-2 border-b border-t shadow-sm cursor-pointer hover:bg-gray-800 rounded hover:text-white">
