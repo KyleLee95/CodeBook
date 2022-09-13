@@ -2,8 +2,12 @@ import Link from 'next/link'
 import React from 'react'
 import TableSmButton from './TableSmButton'
 import { useDeleteNote } from '../hooks/useDeleteNote'
-
-const Table = function ({ notes }: any) {
+import { Note } from '@prisma/client'
+interface Props {
+  notes: Array<Note> | undefined
+}
+const Table: React.FC<Props> = function ({ notes }) {
+  console.log('notes', notes)
   const deleteNote = useDeleteNote()
 
   const confirmMessage = 'are you sure you want to delete this note?'
@@ -74,7 +78,7 @@ const Table = function ({ notes }: any) {
           </tr>
         </thead>
         <tbody>
-          {notes.map((note: any) => {
+          {notes.map((note: Note) => {
             return (
               <Link key={note.id} href={`/notes/${note.id}`}>
                 <tr className="mx-2 border-b border-t shadow-sm cursor-pointer hover:bg-gray-800 rounded hover:text-white">
@@ -88,13 +92,15 @@ const Table = function ({ notes }: any) {
                     scope="row"
                     className="py-4 px-6 font-medium whitespace-nowrap "
                   >
-                    {JSON.parse(note.language).name}
+                    {note.language ? JSON.parse(note.language).name : null}
                   </th>
                   <td className="py-4 px-6 ">
                     {note.createdAt.toLocaleDateString()}
                   </td>
                   <td className="py-4 px-6">
-                    {note.updatedAt.toLocaleDateString()}
+                    {note.updatedAt
+                      ? note.updatedAt.toLocaleDateString()
+                      : null}
                   </td>
                   <td className="py-4 px-6 text-left">
                     <TableSmButton

@@ -7,9 +7,13 @@ import Table from '../../components/Table'
 import Head from 'next/head'
 import SearchBar from '../../components/SearchBar'
 
-const NotesTable = ({ searchTerm }: any) => {
+interface NotesTableProps {
+  searchTerm: string
+}
+
+const NotesTable = ({ searchTerm }: NotesTableProps) => {
   const { isLoading, isError, isFetching, data } = useGetAllNotes(searchTerm)
-  console.log('data', data)
+
   if (isLoading || isFetching) {
     return <h2>loading...</h2>
   }

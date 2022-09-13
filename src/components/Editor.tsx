@@ -5,7 +5,6 @@ import 'react-quill/dist/quill.snow.css'
 import 'highlight.js/styles/monokai-sublime.css'
 import { useUpdateNote } from '../hooks/useUpdateNote'
 import { useRouter } from 'next/router'
-import { off } from 'process'
 
 interface EditorProps {
   text: string | undefined | null
