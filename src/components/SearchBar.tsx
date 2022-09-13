@@ -1,6 +1,10 @@
 import React from 'react'
 
-const SearchBar = ({ handleChange }: any) => {
+interface SearchBarProps {
+  handleChange: (event: string) => void
+}
+
+const SearchBar: React.FC<SearchBarProps> = ({ handleChange }) => {
   return (
     <>
       <input
